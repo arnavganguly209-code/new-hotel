@@ -1,0 +1,393 @@
+OVERVIEW PAGE + GALLERY PAGE + LUXURY SPACING + VISUAL SYSTEM COMPLETE REDESIGN
+
+The Hero section is now much better, but the Overview page is still far from a true luxury hotel website.
+
+This website should feel like a world-class hospitality brand, not a template.
+
+Carefully apply ALL fixes below.
+
+==================================================
+
+1. GLOBAL OVERVIEW PAGE SPACING FIX
+
+Current Problem:
+
+Sections feel attached together.
+
+Content blocks are too close.
+
+Visual breathing room is missing.
+
+Luxury hotel websites always have generous spacing.
+
+FIX:
+
+- Increase vertical spacing between ALL major sections.
+- Minimum 140px–180px spacing between sections.
+- Every section must feel independent.
+- Create smooth transitions between sections.
+- Add scroll reveal animations between sections.
+
+The page must feel elegant and relaxed.
+
+==================================================
+
+2. OVERVIEW PAGE VISUAL SYSTEM REDESIGN
+
+Current Problem:
+
+Many sections still feel like placeholder layouts.
+
+Visual blocks look too simple.
+
+Luxury feeling is missing.
+
+FIX:
+
+Every major section should have its own visual identity.
+
+Do NOT use identical visual panels.
+
+Each section must use different:
+
+- premium colors
+- motion effects
+- layouts
+- shapes
+- hover interactions
+
+Example:
+
+Hotel Experience:
+- warm cream + gold
+
+Garden View Korean Restaurant:
+- soft ivory + champagne gold
+
+Skyz Lounge:
+- elegant midnight navy accents + gold glow
+
+Spa & Wellness:
+- wellness beige + soft gold
+
+Nepal Heritage:
+- warm Nepal-inspired luxury colors
+
+Every section should feel unique.
+
+==================================================
+
+3. HOTEL EXPERIENCE SECTION REDESIGN
+
+Current section is still too basic.
+
+Make it feel premium.
+
+Requirements:
+
+Left Side:
+Luxury animated visual system
+
+NOT a plain box.
+
+Use:
+
+- animated geometric patterns
+- floating luxury shapes
+- gold line motion
+- soft particle animation
+- layered glass effects
+
+Right Side:
+Storytelling content
+
+Luxury typography.
+
+Better hierarchy.
+
+More premium spacing.
+
+==================================================
+
+4. ACCOMMODATION SECTION COMPLETE REDESIGN
+
+Current:
+ACCOMMODATION
+Luxurious Retreats
+
+This section still feels basic.
+
+It should become one of the strongest sections.
+
+Requirements:
+
+- Premium room showcase
+- Animated room cards
+- Luxury hover effects
+- Smooth card elevation
+- Gold accent transitions
+- Rich room descriptions
+
+Room cards should feel expensive.
+
+Add:
+
+- occupancy
+- amenities
+- luxury highlights
+- room size
+- premium booking CTA
+
+Use Framer Motion.
+
+==================================================
+
+5. GARDEN VIEW KOREAN RESTAURANT REDESIGN
+
+Current section needs more personality.
+
+Requirements:
+
+Left:
+Restaurant content
+
+Right:
+Luxury animated dining showcase
+
+Use:
+
+- elegant Korean-inspired patterns
+- luxury dining animation
+- flowing gold accents
+- premium motion graphics
+
+Avoid empty visual areas.
+
+The section must feel like a luxury restaurant brand.
+
+==================================================
+
+6. SKYZ LOUNGE COMPLETE REDESIGN
+
+This section should be one of the most premium parts of the homepage.
+
+Current version is too simple.
+
+Create a signature luxury section.
+
+Requirements:
+
+Visual Experience:
+
+- animated skyline graphics
+- floating ambient glow
+- premium motion effects
+- subtle particle animation
+- elegant gold highlights
+
+Theme:
+
+- rooftop atmosphere
+- Kathmandu skyline inspiration
+- signature drinks
+- luxury nightlife
+
+This section must feel unforgettable.
+
+==================================================
+
+7. SPA & WELLNESS REDESIGN
+
+Reference quality should be similar to the premium feel of the wellness section but more refined.
+
+Current visual area is still too static.
+
+Requirements:
+
+- flowing wellness animation
+- organic motion graphics
+- subtle breathing animation
+- layered visual depth
+- luxury color palette
+
+Use:
+
+- warm wellness beige
+- champagne gold
+- soft ivory
+
+The section should feel calming and expensive.
+
+==================================================
+
+8. NEW NEPAL HERITAGE SECTION (MISSING)
+
+Add a completely new section before the footer.
+
+Section Name:
+
+Nepal Heritage & Hospitality
+
+Purpose:
+
+Showcase:
+
+- Nepalese culture
+- Local traditions
+- Thamel atmosphere
+- Nepalese hospitality
+- Heritage experiences
+
+Style:
+
+Luxury hospitality presentation.
+
+NOT tourism style.
+
+Use:
+
+- elegant cultural storytelling
+- premium visual system
+- animated heritage patterns
+- luxury motion design
+
+This section should connect international luxury with authentic Nepal.
+
+==================================================
+
+9. HERO SECTION FINAL ENHANCEMENT
+
+Hero layout is now improved.
+
+Only enhance it further.
+
+Do NOT redesign from scratch.
+
+Add:
+
+- subtle luxury background animation
+- floating gold particles
+- soft moving gradients
+- elegant motion depth
+- premium text reveal animation
+
+The hero should feel alive.
+
+Do NOT use images.
+
+Keep white theme.
+
+==================================================
+
+10. BOOKING BAR REDESIGN
+
+Current booking bar still feels too short and basic.
+
+Requirements:
+
+Make booking experience more premium.
+
+Use:
+
+- larger height
+- better spacing
+- luxury shadows
+- elegant borders
+- smoother interactions
+
+Fields:
+
+- Check In
+- Check Out
+- Guests
+- Room Type
+
+Must function properly.
+
+Date picker must work.
+
+Guest selector must work.
+
+Room selector must work.
+
+Search button must feel premium.
+
+==================================================
+
+11. GALLERY PAGE FIX (CRITICAL)
+
+Current Problem:
+
+Gallery page shows 404 error.
+
+Fix immediately.
+
+Create a complete Gallery page.
+
+Requirements:
+
+NO IMAGES.
+
+Use:
+
+- animated architectural panels
+- luxury showcase cards
+- gradient visual systems
+- interactive hover effects
+- animated color blocks
+- premium motion layouts
+
+Gallery should feel rich even without images.
+
+Add:
+
+- Hotel Experience
+- Rooms
+- Dining
+- Skyz Lounge
+- Spa & Wellness
+- Nepal Heritage
+
+Each represented through luxury animated visual storytelling.
+
+==================================================
+
+12. ANIMATION UPGRADE
+
+Use Framer Motion heavily across Overview page.
+
+Add:
+
+- reveal animations
+- stagger animations
+- floating elements
+- parallax effects
+- hover interactions
+- luxury micro animations
+
+Website must feel alive.
+
+==================================================
+
+FINAL GOAL
+
+Transform the Overview page into a true luxury hotel experience.
+
+Requirements:
+
+✓ More spacing
+✓ Better section separation
+✓ Premium colors for each section
+✓ Stronger animations
+✓ Luxury storytelling
+✓ Better accommodation section
+✓ Better Skyz Lounge section
+✓ Better Spa section
+✓ New Nepal Heritage section
+✓ Functional booking experience
+✓ Hero background animation
+✓ Gallery page fixed
+✓ No empty placeholder boxes
+✓ World-class hospitality presentation
+
+The website should feel like a premium international luxury hotel brand, not a template.

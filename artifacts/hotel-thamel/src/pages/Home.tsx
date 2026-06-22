@@ -75,6 +75,14 @@ export default function Home() {
         {/* Layer 1: Dot grid */}
         <div className="absolute inset-0 z-0 opacity-[0.06] pointer-events-none" 
              style={{ backgroundImage: 'radial-gradient(#111827 1px, transparent 1px)', backgroundSize: '24px 24px' }} />
+
+        {/* Slow moving gradient */}
+        <motion.div
+          animate={{ x: [-20, 20, -20], y: [-10, 10, -10] }}
+          transition={{ duration: 20, repeat: Infinity, ease: 'easeInOut' }}
+          className="absolute inset-0 z-0 pointer-events-none"
+          style={{ background: 'radial-gradient(ellipse 60% 50% at 70% 40%, rgba(201,169,110,0.05) 0%, transparent 70%)' }}
+        />
         
         {/* Layer 2: Gold Orbs */}
         <motion.div 
@@ -143,6 +151,28 @@ export default function Home() {
                 }}
               />
            ))}
+        </div>
+
+        {/* Layer 6: Floating gold micro-particles */}
+        <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+          {[
+            { size: 3, top: '15%', left: '55%', dur: 6, delay: 0 },
+            { size: 2, top: '35%', left: '75%', dur: 8, delay: 1 },
+            { size: 4, top: '55%', left: '45%', dur: 5, delay: 2 },
+            { size: 2, top: '70%', left: '65%', dur: 7, delay: 0.5 },
+            { size: 3, top: '25%', left: '85%', dur: 9, delay: 1.5 },
+            { size: 2, top: '80%', left: '30%', dur: 6, delay: 2.5 },
+            { size: 4, top: '45%', left: '90%', dur: 7, delay: 3 },
+            { size: 2, top: '10%', left: '30%', dur: 8, delay: 0.8 },
+          ].map((p, i) => (
+            <motion.div
+              key={i}
+              animate={{ y: [0, -20, 0], opacity: [0.15, 0.4, 0.15] }}
+              transition={{ repeat: Infinity, duration: p.dur, delay: p.delay, ease: 'easeInOut' }}
+              className="absolute rounded-full bg-[#c9a96e]"
+              style={{ width: p.size, height: p.size, top: p.top, left: p.left }}
+            />
+          ))}
         </div>
 
         {/* Flex content wrapper — gives proper vertical centering */}
@@ -215,7 +245,7 @@ export default function Home() {
           >
             <div className="flex flex-col md:flex-row">
               {/* Check In */}
-              <div className="flex-1 px-6 py-5 border-b md:border-b-0 md:border-r border-[#f0f0f0] focus-within:bg-[#faf8f4] transition-colors" data-testid="booking-checkin">
+              <div className="flex-1 px-6 py-6 border-b md:border-b-0 md:border-r border-[#f0f0f0] focus-within:bg-[#faf8f4] transition-colors" data-testid="booking-checkin">
                 <div className="flex items-center gap-4">
                   <Calendar className="text-[#c9a96e] w-5 h-5 shrink-0" />
                   <div className="w-full">
@@ -227,7 +257,7 @@ export default function Home() {
               </div>
 
               {/* Check Out */}
-              <div className="flex-1 px-6 py-5 border-b md:border-b-0 md:border-r border-[#f0f0f0] focus-within:bg-[#faf8f4] transition-colors" data-testid="booking-checkout">
+              <div className="flex-1 px-6 py-6 border-b md:border-b-0 md:border-r border-[#f0f0f0] focus-within:bg-[#faf8f4] transition-colors" data-testid="booking-checkout">
                 <div className="flex items-center gap-4">
                   <Calendar className="text-[#c9a96e] w-5 h-5 shrink-0" />
                   <div className="w-full">
@@ -239,7 +269,7 @@ export default function Home() {
               </div>
 
               {/* Room Type */}
-              <div className="flex-1 px-6 py-5 border-b md:border-b-0 md:border-r border-[#f0f0f0] hover:bg-[#faf8f4] cursor-pointer transition-colors relative"
+              <div className="flex-1 px-6 py-6 border-b md:border-b-0 md:border-r border-[#f0f0f0] hover:bg-[#faf8f4] cursor-pointer transition-colors relative"
                 onClick={() => { setShowRoomDropdown(!showRoomDropdown); setShowGuestDropdown(false); }}
                 data-testid="booking-room"
               >
@@ -274,7 +304,7 @@ export default function Home() {
               </div>
 
               {/* Guests */}
-              <div className="flex-1 px-6 py-5 hover:bg-[#faf8f4] cursor-pointer transition-colors relative"
+              <div className="flex-1 px-6 py-6 hover:bg-[#faf8f4] cursor-pointer transition-colors relative"
                 onClick={() => { setShowGuestDropdown(!showGuestDropdown); setShowRoomDropdown(false); }}
                 data-testid="booking-guests"
               >
@@ -323,7 +353,7 @@ export default function Home() {
               {/* CTA */}
               <div className="flex items-stretch shrink-0">
                 <Button onClick={handleSearch} data-testid="booking-submit"
-                  className="w-full md:w-auto rounded-none bg-[#c9a96e] text-white hover:bg-[#a07840] uppercase tracking-widest text-xs px-10 min-h-[4.5rem] h-full">
+                  className="w-full md:w-auto rounded-none bg-[#c9a96e] text-white hover:bg-[#a07840] uppercase tracking-widest text-xs px-10 min-h-[5.5rem] h-full">
                   Search Availability
                 </Button>
               </div>
@@ -350,12 +380,17 @@ export default function Home() {
                {[20, 50, 80].map((top, i) => (
                  <motion.div 
                    key={i}
-                   animate={{ x: [-100, typeof window !== 'undefined' ? window.innerWidth : 1000, -100] }}
-                   transition={{ duration: 15 + i * 5, repeat: Infinity, ease: "linear" }}
+                   animate={{ x: ['-100%', '200%'] }}
+                   transition={{ duration: 15 + i * 5, repeat: Infinity, ease: 'linear' }}
                    className="absolute h-[1px] w-[200px] bg-[#c9a96e] opacity-10 z-0"
                    style={{ top: `${top}%` }}
                  />
                ))}
+
+               {/* Diagonal stripe texture */}
+               <div className="absolute inset-0 pointer-events-none z-0" style={{
+                 backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 30px, rgba(201,169,110,0.03) 30px, rgba(201,169,110,0.03) 31px)'
+               }} />
 
                {/* Centered Card */}
                <motion.div 
@@ -435,67 +470,49 @@ export default function Home() {
          </div>
       </section>
 
-      {/* SECTION 3: GARDEN VIEW KOREAN RESTAURANT */}
-      <section className="bg-[#f8f8f8]">
+      {/* SECTION 3: KOREAN DINING */}
+      <section className="bg-white border-t border-[#f0f0f0]">
          <div className="flex flex-col lg:flex-row min-h-screen">
             
             {/* Left: Content */}
             <div className="w-full lg:w-1/2 flex items-center py-32 lg:py-0 px-6 md:px-16 lg:px-24">
                <div>
-                  <h3 className="text-[#c9a96e] tracking-[0.2em] text-xs uppercase mb-4 font-medium">DINING EXPERIENCE</h3>
+                  <h3 className="text-[#c9a96e] tracking-[0.2em] text-xs uppercase mb-4 font-medium">CULINARY JOURNEY</h3>
                   <h2 className="text-4xl md:text-5xl font-serif text-[#111827] mb-8 leading-tight">
-                    Garden View Korean Restaurant
+                    Authentic Korean Cuisine
                   </h2>
                   <p className="text-[#4b5563] text-lg mb-6 leading-relaxed font-light">
-                    Step into an oasis of culinary perfection where traditional Korean flavors meet the serene beauty of our garden terrace.
+                    Experience the finest Korean dining in Kathmandu at our signature Garden View Restaurant. We pride ourselves on delivering authentic flavors using traditional recipes passed down through generations.
                   </p>
                   <p className="text-[#4b5563] text-lg mb-10 leading-relaxed font-light">
-                    Our master chefs curate an authentic dining experience using the finest ingredients, creating masterpieces that delight both the palate and the senses.
+                    Enjoy a premium dining experience surrounded by lush garden views, whether you're craving classic BBQ, hearty stews, or delicate banchan.
                   </p>
 
-                  <div className="flex flex-col gap-4 mb-10">
-                     <div className="bg-white p-6 shadow-sm border border-[#f0f0f0]">
-                        <h4 className="font-serif text-xl text-[#111827] mb-1">Korean BBQ</h4>
-                        <p className="text-[#4b5563] text-sm font-light">Authentic table-side grill experience</p>
-                     </div>
-                     <div className="bg-white p-6 shadow-sm border border-[#f0f0f0]">
-                        <h4 className="font-serif text-xl text-[#111827] mb-1">Traditional Set Menus</h4>
-                        <p className="text-[#4b5563] text-sm font-light">Curated multi-course Korean dining</p>
-                     </div>
-                     <div className="bg-white p-6 shadow-sm border border-[#f0f0f0]">
-                        <h4 className="font-serif text-xl text-[#111827] mb-1">Garden Terrace</h4>
-                        <p className="text-[#4b5563] text-sm font-light">Al fresco dining amidst lush greenery</p>
-                     </div>
+                  <div className="grid grid-cols-2 gap-y-4 gap-x-8 mb-12">
+                     {["Authentic BBQ", "Private Dining", "Garden Setting", "Premium Soju", "Traditional Recipes", "Open Daily"].map((service, i) => (
+                        <div key={i} className="flex items-center gap-3">
+                           <div className="w-1.5 h-1.5 rounded-full bg-[#c9a96e]" />
+                           <span className="text-[#111827] font-medium text-sm">{service}</span>
+                        </div>
+                     ))}
                   </div>
 
-                  <div className="flex flex-wrap gap-3 mb-10">
-                     <span className="text-xs uppercase tracking-widest text-[#c9a96e] font-medium">Korean Cuisine</span>
-                     <span className="text-[#c9a96e]">·</span>
-                     <span className="text-xs uppercase tracking-widest text-[#c9a96e] font-medium">Garden Seating</span>
-                     <span className="text-[#c9a96e]">·</span>
-                     <span className="text-xs uppercase tracking-widest text-[#c9a96e] font-medium">Indoor & Outdoor</span>
-                  </div>
-
-                  <Button asChild className="rounded-none bg-[#c9a96e] text-white hover:bg-[#a07840] px-8 py-6 h-auto tracking-widest uppercase text-xs">
+                  <Button asChild variant="outline" className="border-[#111827] text-[#111827] hover:bg-[#111827] hover:text-white rounded-none uppercase tracking-widest text-xs px-8 py-6 h-auto">
                      <Link href="/restaurant">View Menu</Link>
                   </Button>
                </div>
             </div>
 
-            {/* Right: Animated Visual Showcase */}
-            <div className="w-full lg:w-1/2 bg-white relative overflow-hidden flex items-center justify-center py-32 lg:py-0 border-l border-[#f0f0f0]">
-               {/* BIG Background Geometric Pattern */}
-               <div 
-                 className="absolute inset-0 z-0 pointer-events-none"
-                 style={{ 
-                   backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 40px, rgba(201,169,110,0.05) 40px, rgba(201,169,110,0.05) 41px), repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(201,169,110,0.05) 40px, rgba(201,169,110,0.05) 41px)" 
-                 }}
-               />
+            {/* Right: Abstract Dining Visual */}
+            <div className="w-full lg:w-1/2 bg-[#faf8f4] relative overflow-hidden flex items-center justify-center py-32 lg:py-0">
+               
+               {/* Pattern Background */}
+               <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(#111827 2px, transparent 2px)', backgroundSize: '30px 30px' }} />
 
-               {/* 4 Corner Accents */}
+               {/* Decorative Lines framing the card */}
                <div className="absolute top-8 left-8 w-[30px] h-[1px] bg-[#c9a96e] opacity-20" />
                <div className="absolute top-8 left-8 w-[1px] h-[30px] bg-[#c9a96e] opacity-20" />
-               
+
                <div className="absolute top-8 right-8 w-[30px] h-[1px] bg-[#c9a96e] opacity-20" />
                <div className="absolute top-8 right-8 w-[1px] h-[30px] bg-[#c9a96e] opacity-20" />
 
@@ -550,6 +567,36 @@ export default function Home() {
                    transition={{ duration: 20 + i * 5, repeat: Infinity, ease: "linear" }}
                    className="absolute h-[1px] w-[300px] bg-[#c9a96e] opacity-[0.05] z-0"
                    style={{ top: `${top}%` }}
+                 />
+               ))}
+
+               {/* Ambient pulse glow */}
+               <motion.div
+                 animate={{ scale: [1, 1.3, 1], opacity: [0.04, 0.09, 0.04] }}
+                 transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+                 className="absolute top-[20%] left-[30%] w-48 h-48 rounded-full pointer-events-none"
+                 style={{ background: '#c9a96e', filter: 'blur(60px)' }}
+               />
+               <motion.div
+                 animate={{ scale: [1, 1.2, 1], opacity: [0.03, 0.07, 0.03] }}
+                 transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
+                 className="absolute bottom-[30%] right-[20%] w-32 h-32 rounded-full pointer-events-none"
+                 style={{ background: 'amber', filter: 'blur(40px)' }}
+               />
+
+               {/* Star particles */}
+               {[...Array(12)].map((_, i) => (
+                 <motion.div
+                   key={i}
+                   animate={{ opacity: [0.2, 0.7, 0.2] }}
+                   transition={{ duration: 2 + (i % 4), repeat: Infinity, delay: i * 0.3, ease: 'easeInOut' }}
+                   className="absolute rounded-full bg-white"
+                   style={{
+                     width: i % 3 === 0 ? 2 : 1,
+                     height: i % 3 === 0 ? 2 : 1,
+                     top: `${8 + (i * 5) % 45}%`,
+                     left: `${5 + (i * 13) % 90}%`,
+                   }}
                  />
                ))}
 
@@ -716,9 +763,13 @@ export default function Home() {
                   ))}
 
                   {/* Center Icon */}
-                  <div className="absolute w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-lg border border-[#f0f0f0] z-10">
+                  <motion.div
+                    animate={{ scale: [1, 1.08, 1] }}
+                    transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+                    className="absolute w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-lg border border-[#f0f0f0] z-10"
+                  >
                      <Sparkles className="w-8 h-8 text-[#c9a96e]" />
-                  </div>
+                  </motion.div>
 
                   {/* Floating Words */}
                   <div className="absolute top-[20%] left-[20%] font-serif italic text-4xl text-[#111827] opacity-[0.08]">Serenity</div>
@@ -736,7 +787,7 @@ export default function Home() {
       </section>
 
       {/* SECTION 6: NEPAL HERITAGE & HOSPITALITY */}
-      <section className="py-32 bg-white border-y border-[#f0f0f0]">
+      <section className="py-44 bg-white border-y border-[#f0f0f0]">
          <div className="container mx-auto px-6 md:px-14 lg:px-20 max-w-6xl">
             
             <div className="text-center mb-16">
@@ -798,7 +849,7 @@ export default function Home() {
       </section>
 
       {/* SECTION 7: ROOMS */}
-      <section className="py-32 bg-[#f8f8f8]">
+      <section className="py-44 bg-[#f8f8f8]">
         <div className="container mx-auto px-6 md:px-14 lg:px-20 max-w-7xl">
           <div className="text-center mb-20">
             <h3 className="text-[#c9a96e] tracking-[0.2em] text-xs uppercase mb-4 font-medium">ACCOMMODATION</h3>
@@ -806,56 +857,60 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {[
-              { name: "Super Deluxe Twin", price: "60", guests: 2, desc: "Elegant retreat with twin beds and modern comfort.", amenities: [{i: Wifi, l: "Wifi"}, {i: Tv, l: "TV"}, {i: Wind, l: "AC"}, {i: Coffee, l: "Coffee"}] },
-              { name: "Super Deluxe Room", price: "60", guests: 2, desc: "Spacious comfort with premium king bed setup.", amenities: [{i: Wifi, l: "Wifi"}, {i: Tv, l: "TV"}, {i: Wind, l: "AC"}, {i: Coffee, l: "Coffee"}] },
-              { name: "Family Room", price: "55", guests: 4, desc: "Perfect for families, featuring interconnected spaces.", amenities: [{i: Wifi, l: "Wifi"}, {i: Tv, l: "TV"}, {i: Wind, l: "AC"}, {i: Coffee, l: "Coffee"}] },
-              { name: "Standard Deluxe Room", price: "50", guests: 2, desc: "Comfortable standard room with essential amenities.", amenities: [{i: Wifi, l: "Wifi"}, {i: Tv, l: "TV"}, {i: Wind, l: "AC"}, {i: Coffee, l: "Coffee"}] }
-            ].map((room, i) => (
-              <motion.div 
-                key={i} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp} transition={{ delay: i * 0.1 }}
-                whileHover={{ y: -6 }}
-                className="bg-white shadow-[0_4px_24px_rgba(0,0,0,0.04)] border border-[#f0f0f0] rounded-none overflow-hidden flex flex-col group"
-              >
-                <div className="h-1 w-full bg-gradient-to-r from-[#c9a96e] to-[#a07840]" />
-                <div className="p-10 flex flex-col h-full">
-                  <div className="flex justify-between items-start mb-6">
-                    <h3 className="text-3xl font-serif text-[#111827] max-w-[60%] leading-tight">{room.name}</h3>
-                    <div className="text-right">
-                       <div className="text-[10px] tracking-widest text-[#4b5563] uppercase mb-1">From</div>
-                       <div className="font-serif text-3xl text-[#c9a96e]">${room.price}</div>
-                       <div className="text-[10px] tracking-widest text-[#4b5563] uppercase mt-1">Per Night</div>
-                    </div>
-                  </div>
-                  
-                  <p className="text-[#4b5563] text-base font-light mb-8 flex-grow">{room.desc}</p>
-                  
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                    {room.amenities.map((am, idx) => (
-                      <div key={idx} className="flex flex-col items-center justify-center p-3 bg-[#f8f8f8] border border-[#f0f0f0]">
-                        <am.i className="w-4 h-4 text-[#c9a96e] mb-2" /> 
-                        <span className="text-[10px] uppercase tracking-widest font-medium text-[#4b5563]">{am.l}</span>
+            {(() => {
+              const roomSizes = ['32m²', '35m²', '52m²', '28m²'];
+              return [
+                { name: "Super Deluxe Twin", price: "60", guests: 2, desc: "Elegant retreat with twin beds and modern comfort.", amenities: [{i: Wifi, l: "Wifi"}, {i: Tv, l: "TV"}, {i: Wind, l: "AC"}, {i: Coffee, l: "Coffee"}] },
+                { name: "Super Deluxe Room", price: "60", guests: 2, desc: "Spacious comfort with premium king bed setup.", amenities: [{i: Wifi, l: "Wifi"}, {i: Tv, l: "TV"}, {i: Wind, l: "AC"}, {i: Coffee, l: "Coffee"}] },
+                { name: "Family Room", price: "55", guests: 4, desc: "Perfect for families, featuring interconnected spaces.", amenities: [{i: Wifi, l: "Wifi"}, {i: Tv, l: "TV"}, {i: Wind, l: "AC"}, {i: Coffee, l: "Coffee"}] },
+                { name: "Standard Deluxe Room", price: "50", guests: 2, desc: "Comfortable standard room with essential amenities.", amenities: [{i: Wifi, l: "Wifi"}, {i: Tv, l: "TV"}, {i: Wind, l: "AC"}, {i: Coffee, l: "Coffee"}] }
+              ].map((room, i) => (
+                <motion.div 
+                  key={i} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp} transition={{ delay: i * 0.1 }}
+                  whileHover={{ y: -6 }}
+                  className="bg-white shadow-[0_4px_24px_rgba(0,0,0,0.04)] border border-[#f0f0f0] rounded-none overflow-hidden flex flex-col group"
+                >
+                  <div className="h-1 w-full bg-gradient-to-r from-[#c9a96e] to-[#a07840]" />
+                  <div className="p-10 flex flex-col h-full">
+                    <div className="flex justify-between items-start mb-6">
+                      <h3 className="text-3xl font-serif text-[#111827] max-w-[60%] leading-tight">{room.name}</h3>
+                      <div className="text-right">
+                         <div className="text-[10px] tracking-widest text-[#4b5563] uppercase mb-1">From</div>
+                         <div className="font-serif text-3xl text-[#c9a96e]">${room.price}</div>
+                         <div className="text-[10px] tracking-widest text-[#4b5563] uppercase mt-1">Per Night</div>
+                         <div className="text-[9px] text-[#9ca3af] uppercase tracking-widest mt-1">{roomSizes[i]}</div>
                       </div>
-                    ))}
-                  </div>
-
-                  <div className="flex items-center justify-between pt-6 border-t border-[#f0f0f0]">
-                    <div className="flex items-center gap-2 text-[#4b5563] text-sm uppercase tracking-widest font-medium">
-                      <Users className="w-4 h-4 text-[#c9a96e]" /> {room.guests} Guests
                     </div>
-                    <Button asChild variant="outline" className="border-[#c9a96e] text-[#c9a96e] hover:bg-[#c9a96e] hover:text-white rounded-none uppercase tracking-widest text-xs px-8 py-6 h-auto transition-colors">
-                      <Link href="/contact">Book This Room</Link>
-                    </Button>
+                    
+                    <p className="text-[#4b5563] text-base font-light mb-8 flex-grow leading-relaxed">{room.desc}</p>
+                    
+                    <div className="grid grid-cols-4 gap-3 mb-8">
+                      {room.amenities.map((am, idx) => (
+                        <div key={idx} className="flex flex-col items-center justify-center p-3 bg-white border border-[#f0f0f0] hover:border-[#c9a96e] transition-colors">
+                          <am.i className="w-4 h-4 text-[#c9a96e] mb-2" /> 
+                          <span className="text-[10px] uppercase tracking-widest font-medium text-[#4b5563]">{am.l}</span>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="flex items-center justify-between pt-6 border-t border-[#f0f0f0]">
+                      <div className="flex items-center gap-2 text-[#4b5563] text-sm uppercase tracking-widest font-medium">
+                        <Users className="w-4 h-4 text-[#c9a96e]" /> {room.guests} Guests
+                      </div>
+                      <Button asChild variant="outline" className="border-[#c9a96e] text-[#c9a96e] hover:bg-[#c9a96e] hover:text-white rounded-none uppercase tracking-widest text-xs px-8 py-6 h-auto transition-colors">
+                        <Link href="/contact">Book This Room</Link>
+                      </Button>
+                    </div>
                   </div>
-                </div>
-              </motion.div>
-            ))}
+                </motion.div>
+              ));
+            })()}
           </div>
         </div>
       </section>
 
       {/* SECTION 8: TESTIMONIALS */}
-      <section className="py-32 bg-white border-b border-[#f0f0f0]">
+      <section className="py-44 bg-white border-b border-[#f0f0f0]">
         <div className="container mx-auto px-6 md:px-14 lg:px-20 max-w-7xl">
            <div className="text-center mb-20">
             <h3 className="text-[#c9a96e] tracking-[0.2em] text-xs uppercase mb-4 font-medium">GUEST EXPERIENCES</h3>
@@ -885,7 +940,7 @@ export default function Home() {
       </section>
 
       {/* SECTION 9: LOCATION */}
-      <section className="py-32 bg-[#f8f8f8]">
+      <section className="py-40 bg-[#f8f8f8]">
         <div className="container mx-auto px-6 md:px-14 lg:px-20 max-w-7xl">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
              
@@ -943,7 +998,7 @@ export default function Home() {
       </section>
 
       {/* SECTION 10: FAQ */}
-      <section className="py-32 bg-white">
+      <section className="py-40 bg-white">
         <div className="container mx-auto px-6 md:px-14 lg:px-20 max-w-4xl">
            <div className="text-center mb-16">
             <h3 className="text-[#c9a96e] tracking-[0.2em] text-xs uppercase mb-4 font-medium">INFORMATION</h3>
@@ -973,7 +1028,7 @@ export default function Home() {
       </section>
 
       {/* SECTION 11: BOOKING CTA */}
-      <section className="py-32 bg-[#faf8f4] border-t border-[#f0f0f0]">
+      <section className="py-40 bg-[#faf8f4] border-t border-[#f0f0f0]">
         <div className="container mx-auto px-6 md:px-14 lg:px-20 text-center max-w-4xl">
            <div className="w-16 h-16 mx-auto rounded-full bg-white flex items-center justify-center shadow-sm mb-8">
               <Key className="w-6 h-6 text-[#c9a96e]" />

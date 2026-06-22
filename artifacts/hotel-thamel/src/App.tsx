@@ -13,6 +13,7 @@ import Spa from "@/pages/Spa";
 import Restaurant from "@/pages/Restaurant";
 import About from "@/pages/About";
 import Contact from "@/pages/Contact";
+import Gallery from "@/pages/Gallery";
 
 const queryClient = new QueryClient();
 
@@ -28,6 +29,7 @@ function Router() {
           <Route path="/restaurant" component={Restaurant} />
           <Route path="/about" component={About} />
           <Route path="/contact" component={Contact} />
+          <Route path="/gallery" component={Gallery} />
           <Route component={NotFound} />
         </Switch>
       </main>
