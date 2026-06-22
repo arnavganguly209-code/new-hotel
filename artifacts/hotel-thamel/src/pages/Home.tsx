@@ -232,9 +232,9 @@ export default function Home() {
               >
                 {[
                   { val: <><AnimatedNumber value={84} /></>, label: "Rooms" },
-                  { val: <><AnimatedNumber value={15000} />+</>, label: "Happy Guests" },
+                  { val: <><AnimatedNumber value={288} />K+</>, label: "Happy Guests" },
                   { val: <><AnimatedNumber value={25} />+</>, label: "Years Experience" },
-                  { val: <>Premium</>, label: "Spa & Wellness" },
+                  { val: <><AnimatedNumber value={15} />K+</>, label: "Happy Customers" },
                 ].map((s, i) => (
                   <div key={i} className="flex items-center gap-8 lg:gap-14">
                     <div>
@@ -631,51 +631,63 @@ export default function Home() {
       <section className="bg-white">
         <div className="flex flex-col lg:flex-row-reverse min-h-screen">
 
-          {/* Right: Dark Night Visual Panel */}
+          {/* Right: Warm Champagne Gold Visual Panel */}
           <div className="w-full lg:w-[58%] relative overflow-hidden flex items-center justify-center py-32 lg:py-0"
-            style={{ background: 'linear-gradient(160deg, #0a0f1e 0%, #111827 40%, #0d1b36 100%)' }}>
+            style={{ background: 'linear-gradient(150deg, #fdf5e0 0%, #f5e4a8 45%, #edd898 100%)' }}>
 
-            {/* Star field */}
-            {[...Array(28)].map((_, i) => (
+            {/* Diagonal stripe texture */}
+            <div className="absolute inset-0 pointer-events-none" style={{
+              backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 32px, rgba(160,120,64,0.05) 32px, rgba(160,120,64,0.05) 33px)'
+            }} />
+
+            {/* Warm ambient glow */}
+            <motion.div
+              animate={{ scale: [1, 1.35, 1], opacity: [0.08, 0.18, 0.08] }}
+              transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
+              className="absolute top-[20%] left-[30%] w-64 h-64 rounded-full pointer-events-none"
+              style={{ background: '#c9a96e', filter: 'blur(80px)' }}
+            />
+            <motion.div
+              animate={{ scale: [1, 1.2, 1], opacity: [0.06, 0.12, 0.06] }}
+              transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
+              className="absolute bottom-[25%] right-[15%] w-44 h-44 rounded-full pointer-events-none"
+              style={{ background: '#e8c87e', filter: 'blur(60px)' }}
+            />
+
+            {/* Floating gold particles */}
+            {[
+              { size: 4, top: '12%', left: '18%', dur: 6, delay: 0 },
+              { size: 3, top: '28%', left: '78%', dur: 8, delay: 1 },
+              { size: 5, top: '60%', left: '88%', dur: 5.5, delay: 0.5 },
+              { size: 3, top: '75%', left: '22%', dur: 7, delay: 2 },
+              { size: 4, top: '40%', left: '10%', dur: 6.5, delay: 1.5 },
+              { size: 3, top: '85%', left: '65%', dur: 7.5, delay: 2.5 },
+              { size: 4, top: '20%', left: '50%', dur: 5, delay: 3 },
+            ].map((p, i) => (
               <motion.div key={i}
-                animate={{ opacity: [0.15 + (i % 5) * 0.1, 0.8, 0.15 + (i % 5) * 0.1] }}
-                transition={{ duration: 1.8 + (i % 5) * 0.7, repeat: Infinity, delay: i * 0.18, ease: 'easeInOut' }}
-                className="absolute rounded-full bg-white"
-                style={{
-                  width: i % 5 === 0 ? 2.5 : i % 3 === 0 ? 2 : 1.5,
-                  height: i % 5 === 0 ? 2.5 : i % 3 === 0 ? 2 : 1.5,
-                  top: `${4 + (i * 7) % 52}%`,
-                  left: `${3 + (i * 13) % 94}%`,
-                }}
+                animate={{ y: [0, -20, 0], opacity: [0.2, 0.55, 0.2] }}
+                transition={{ repeat: Infinity, duration: p.dur, delay: p.delay, ease: 'easeInOut' }}
+                className="absolute rounded-full"
+                style={{ width: p.size, height: p.size, top: p.top, left: p.left, background: '#a07840', opacity: 0.35 }}
               />
             ))}
 
-            {/* Moon glow */}
-            <div className="absolute top-12 right-16 w-20 h-20 rounded-full pointer-events-none"
-              style={{ background: GOLD, filter: 'blur(30px)', opacity: 0.12 }} />
-            <div className="absolute top-14 right-18 w-10 h-10 rounded-full pointer-events-none"
-              style={{ background: '#fff8e7', filter: 'blur(12px)', opacity: 0.15 }} />
+            {/* Geometric floating rings */}
+            {[160, 110, 70].map((size, i) => (
+              <motion.div key={i}
+                animate={{ rotate: (i % 2 === 0 ? 1 : -1) * 360 }}
+                transition={{ duration: 30 + i * 10, repeat: Infinity, ease: 'linear' }}
+                className="absolute rounded-full border border-dashed"
+                style={{ width: size, height: size, borderColor: '#a07840', opacity: 0.1 + i * 0.04 }}
+              />
+            ))}
 
-            {/* Ambient gold glow pulses */}
-            <motion.div
-              animate={{ scale: [1, 1.4, 1], opacity: [0.05, 0.12, 0.05] }}
-              transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
-              className="absolute top-[25%] left-[35%] w-56 h-56 rounded-full pointer-events-none"
-              style={{ background: GOLD, filter: 'blur(70px)' }}
-            />
-            <motion.div
-              animate={{ scale: [1, 1.25, 1], opacity: [0.04, 0.09, 0.04] }}
-              transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut', delay: 2.5 }}
-              className="absolute bottom-[28%] right-[18%] w-40 h-40 rounded-full pointer-events-none"
-              style={{ background: '#f59e0b', filter: 'blur(55px)' }}
-            />
-
-            {/* Kathmandu skyline silhouette */}
-            <div className="absolute bottom-0 left-0 right-0 flex items-end justify-around px-8 gap-3" style={{ height: '38%' }}>
+            {/* Kathmandu skyline silhouette — charcoal on gold */}
+            <div className="absolute bottom-0 left-0 right-0 flex items-end justify-around px-8 gap-3" style={{ height: '36%' }}>
               {[
                 { h: '58%', w: '11%' }, { h: '82%', w: '17%' }, { h: '44%', w: '9%' },
-                { h: '100%', w: '24%' }, { h: '68%', w: '13%' }, { h: '46%', w: '10%' },
-                { h: '88%', w: '16%' }
+                { h: '100%', w: '22%' }, { h: '68%', w: '13%' }, { h: '48%', w: '10%' },
+                { h: '86%', w: '16%' }
               ].map((b, i) => (
                 <motion.div key={i}
                   initial={{ y: 50, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }}
@@ -683,13 +695,13 @@ export default function Home() {
                   className="rounded-t-[1px]"
                   style={{
                     height: b.h, width: b.w,
-                    background: `linear-gradient(180deg, ${GOLD}18 0%, ${GOLD}08 100%)`,
-                    borderTop: `1px solid ${GOLD}20`
+                    background: 'rgba(120,90,40,0.12)',
+                    borderTop: '1px solid rgba(120,90,40,0.18)'
                   }}
                 >
                   {i % 2 === 0 && (
                     <div className="w-full h-full" style={{
-                      backgroundImage: 'radial-gradient(rgba(201,169,110,0.25) 1px, transparent 1px)',
+                      backgroundImage: 'radial-gradient(rgba(120,90,40,0.2) 1px, transparent 1px)',
                       backgroundSize: '8px 10px'
                     }} />
                   )}
@@ -697,35 +709,28 @@ export default function Home() {
               ))}
             </div>
 
-            {/* Horizon glow line */}
-            <div className="absolute bottom-[36%] left-0 right-0 h-[1px] pointer-events-none"
-              style={{ background: `linear-gradient(90deg, transparent 10%, ${GOLD}25 40%, ${GOLD}35 50%, ${GOLD}25 60%, transparent 90%)` }} />
+            {/* Horizon line */}
+            <div className="absolute bottom-[34%] left-0 right-0 h-[1px] pointer-events-none"
+              style={{ background: 'linear-gradient(90deg, transparent 10%, rgba(160,120,64,0.3) 40%, rgba(160,120,64,0.45) 50%, rgba(160,120,64,0.3) 60%, transparent 90%)' }} />
 
-            {/* Floating card */}
+            {/* White card */}
             <motion.div
               initial={{ opacity: 0, scale: 0.94 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.9, delay: 0.3 }}
-              className="relative z-10 p-12 max-w-md w-full mx-6 text-center"
-              style={{
-                background: 'rgba(255,255,255,0.04)',
-                border: '1px solid rgba(201,169,110,0.2)',
-                backdropFilter: 'blur(12px)',
-                boxShadow: '0 40px 80px rgba(0,0,0,0.4), 0 0 0 1px rgba(201,169,110,0.1) inset'
-              }}
+              className="relative z-10 bg-white p-12 max-w-md w-full mx-6 text-center border-t-4"
+              style={{ borderTopColor: GOLD, boxShadow: '0 30px 80px rgba(120,90,40,0.15), 0 4px 20px rgba(201,169,110,0.12)' }}
             >
-              <div className="absolute -top-8 left-1/2 -translate-x-1/2 w-16 h-16 rounded-full flex items-center justify-center"
-                style={{ background: 'rgba(201,169,110,0.12)', border: `1px solid ${GOLD}30` }}>
+              <div className="absolute -top-8 left-1/2 -translate-x-1/2 w-16 h-16 bg-white rounded-full flex items-center justify-center border border-[#f0f0f0]"
+                style={{ boxShadow: '0 4px 16px rgba(201,169,110,0.2)' }}>
                 <Coffee className="w-6 h-6" style={{ color: GOLD }} />
               </div>
-              <h3 className="font-serif italic mt-4 text-white" style={{ fontSize: '4.5rem', lineHeight: 1 }}>Skyz</h3>
-              <div className="text-[10px] tracking-[0.3em] text-white/40 uppercase mb-6 mt-2 font-medium">Rooftop Lounge</div>
-              <div className="w-14 h-px mx-auto mb-6" style={{ background: GOLD, opacity: 0.4 }} />
-              <div className="text-xs text-white/35 uppercase tracking-widest">Floor 8 · Open Daily · 4PM – 11PM</div>
-
-              {/* Three feature tags */}
+              <h3 className="font-serif italic mt-4 text-[#111827]" style={{ fontSize: '4.5rem', lineHeight: 1 }}>Skyz</h3>
+              <div className="text-[10px] tracking-[0.3em] text-[#6b7280] uppercase mb-6 mt-2 font-medium">Rooftop Lounge</div>
+              <div className="w-14 h-px mx-auto mb-6" style={{ background: GOLD, opacity: 0.5 }} />
+              <div className="text-xs text-[#6b7280] uppercase tracking-widest">Floor 8 · Open Daily · 4PM – 11PM</div>
               <div className="flex gap-3 justify-center mt-8">
                 {["Cocktails", "Live Music", "Panoramic"].map(tag => (
-                  <span key={tag} className="text-[9px] tracking-wider uppercase px-3 py-1.5"
-                    style={{ color: `${GOLD}90`, border: `1px solid ${GOLD}20` }}>{tag}</span>
+                  <span key={tag} className="text-[9px] tracking-wider uppercase px-3 py-1.5 border"
+                    style={{ color: GOLD, borderColor: `${GOLD}40` }}>{tag}</span>
                 ))}
               </div>
             </motion.div>

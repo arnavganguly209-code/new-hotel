@@ -1,14 +1,17 @@
-import { motion } from "framer-motion";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import {
   Sparkles, Star, Leaf, Wind, Coffee, UtensilsCrossed,
-  Wifi, Key, Users, MapPin, Heart, Mountain
+  Users, MapPin, Heart, Mountain, ChevronRight
 } from "lucide-react";
+
+const GOLD = "#c9a96e";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: "easeOut" } },
 };
 
 const stagger = {
@@ -16,333 +19,335 @@ const stagger = {
   visible: { transition: { staggerChildren: 0.1 } },
 };
 
-const GOLD = "#c9a96e";
-const GOLD_LIGHT = "rgba(201,169,110,0.08)";
+const CATEGORIES = [
+  "All", "Reception", "Garden Area", "Breakfast Area",
+  "Guest Rooms", "Bathroom", "Restaurant", "Skyz Lounge", "Spa & Wellness"
+];
 
-function SectionLabel({ children }: { children: string }) {
+type PanelConfig = {
+  id: string;
+  category: string;
+  label: string;
+  title: string;
+  subtitle: string;
+  description: string;
+  bg: string;
+  accent: string;
+  watermark: string;
+  tags: string[];
+  span?: string;
+};
+
+const PANELS: PanelConfig[] = [
+  {
+    id: "reception",
+    category: "Reception",
+    label: "Grand Entrance",
+    title: "The Reception",
+    subtitle: "Where your journey begins",
+    description: "A warm, luminous welcome awaits at the heart of Hotel Thamel Park & Spa. Warm ivory marble, hand-crafted gold detailing, and the subtle scent of Nepalese flowers define your first impression.",
+    bg: "linear-gradient(135deg, #fdf8f0 0%, #f5ead8 60%, #ede0c4 100%)",
+    accent: "#c9a96e",
+    watermark: "R",
+    tags: ["Concierge", "Luggage Service", "24/7 Service"],
+    span: "lg:col-span-2",
+  },
+  {
+    id: "garden",
+    category: "Garden Area",
+    label: "Outdoor Sanctuary",
+    title: "The Garden",
+    subtitle: "Nature woven into luxury",
+    description: "Lush greenery and curated blooms frame our serene garden terrace — a hidden retreat in the heart of Thamel.",
+    bg: "linear-gradient(145deg, #f0f8f0 0%, #ddf0dd 55%, #c8e8c8 100%)",
+    accent: "#5a8a5a",
+    watermark: "G",
+    tags: ["Garden Terrace", "Seating", "Events"],
+  },
+  {
+    id: "breakfast",
+    category: "Breakfast Area",
+    label: "Morning Ritual",
+    title: "Breakfast Lounge",
+    subtitle: "A golden start to every day",
+    description: "Wake to a spread of continental and Nepalese delicacies served in a sunlit champagne-gold setting that makes every morning feel like a celebration.",
+    bg: "linear-gradient(150deg, #fefaee 0%, #f8edca 55%, #f0e0a0 100%)",
+    accent: "#b8901e",
+    watermark: "B",
+    tags: ["Continental", "Nepalese", "7AM – 10AM"],
+    span: "lg:col-span-2",
+  },
+  {
+    id: "guestrooms",
+    category: "Guest Rooms",
+    label: "Private Sanctuary",
+    title: "Guest Rooms",
+    subtitle: "84 rooms of refined comfort",
+    description: "Each room is an intimate world of precision and warmth — plush linens, bespoke furniture, and views of Thamel's rooftops.",
+    bg: "linear-gradient(135deg, #faf6ee 0%, #f0e6d0 55%, #e4d4b4 100%)",
+    accent: "#c9a96e",
+    watermark: "4",
+    tags: ["84 Rooms", "City View", "King or Twin"],
+  },
+  {
+    id: "bathroom",
+    category: "Bathroom",
+    label: "Marble Sanctuary",
+    title: "Bathroom Experience",
+    subtitle: "Spa-grade luxury in every room",
+    description: "Rain showers, marble surfaces, and hand-selected bath amenities transform your daily ritual into a moment of pure indulgence.",
+    bg: "linear-gradient(150deg, #fafafa 0%, #f2f0ee 50%, #e8e4de 100%)",
+    accent: "#9ca3af",
+    watermark: "M",
+    tags: ["Rain Shower", "Marble Finish", "Premium Amenities"],
+  },
+  {
+    id: "restaurant",
+    category: "Restaurant",
+    label: "Culinary Journey",
+    title: "Garden View Restaurant",
+    subtitle: "Authentic Korean cuisine",
+    description: "Traditional Korean recipes, master chefs, and a garden setting create an unrivaled dining experience — the finest Korean table in Kathmandu.",
+    bg: "linear-gradient(135deg, #fdf6e8 0%, #f5e8c4 55%, #edda9a 100%)",
+    accent: "#c9a96e",
+    watermark: "餐",
+    tags: ["Korean BBQ", "Garden View", "Private Dining"],
+    span: "lg:col-span-2",
+  },
+  {
+    id: "skyz",
+    category: "Skyz Lounge",
+    label: "Rooftop Experience",
+    title: "Skyz Lounge",
+    subtitle: "Above the city, above the ordinary",
+    description: "Signature cocktails, live jazz, and panoramic views of Kathmandu's skyline from the 8th floor — an evening you will not forget.",
+    bg: "linear-gradient(150deg, #fdf5e0 0%, #f5e4a8 50%, #edd898 100%)",
+    accent: "#a07840",
+    watermark: "S",
+    tags: ["Floor 8", "Cocktails", "4PM – 11PM"],
+  },
+  {
+    id: "spa",
+    category: "Spa & Wellness",
+    label: "Holistic Wellness",
+    title: "Spa & Wellness",
+    subtitle: "Restore. Renew. Revive.",
+    description: "Ancient therapeutic traditions meet modern luxury treatments. Our expert therapists guide you on a journey of complete restoration.",
+    bg: "linear-gradient(145deg, #f5f0e8 0%, #ede4d0 55%, #e0d0b4 100%)",
+    accent: "#c9a96e",
+    watermark: "✦",
+    tags: ["Massage", "Sauna", "Steam Room"],
+  },
+];
+
+function GalleryPanel({ panel, index }: { panel: PanelConfig; index: number }) {
+  const isWide = panel.span === "lg:col-span-2";
+
   return (
-    <p className="text-[10px] uppercase tracking-[0.3em] font-semibold mb-3" style={{ color: GOLD }}>
-      {children}
-    </p>
+    <motion.div
+      variants={fadeInUp}
+      whileHover={{ y: -6, boxShadow: `0 30px 70px rgba(0,0,0,0.09), 0 4px 20px rgba(201,169,110,0.1)` }}
+      transition={{ duration: 0.35 }}
+      className={`relative overflow-hidden cursor-pointer group ${panel.span || ""}`}
+      style={{ minHeight: isWide ? 420 : 360 }}
+    >
+      {/* Background */}
+      <div className="absolute inset-0" style={{ background: panel.bg }} />
+
+      {/* Diagonal stripe texture */}
+      <div className="absolute inset-0 pointer-events-none" style={{
+        backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 28px, rgba(0,0,0,0.02) 28px, rgba(0,0,0,0.02) 29px)'
+      }} />
+
+      {/* Large watermark */}
+      <div className="absolute top-4 right-6 font-serif leading-none select-none pointer-events-none z-0"
+        style={{ fontSize: isWide ? '11rem' : '8rem', color: panel.accent, opacity: 0.07 }}>
+        {panel.watermark}
+      </div>
+
+      {/* Animated glow */}
+      <motion.div
+        animate={{ scale: [1, 1.3, 1], opacity: [0.04, 0.12, 0.04] }}
+        transition={{ duration: 6 + index, repeat: Infinity, ease: 'easeInOut', delay: index * 0.5 }}
+        className="absolute top-1/3 left-1/3 w-48 h-48 rounded-full pointer-events-none"
+        style={{ background: panel.accent, filter: 'blur(60px)' }}
+      />
+
+      {/* Floating particles */}
+      {[
+        { size: 3, top: '15%', left: '12%', dur: 5 + index * 0.3 },
+        { size: 4, top: '70%', left: '82%', dur: 7 + index * 0.2 },
+        { size: 3, top: '35%', left: '88%', dur: 6 + index * 0.4 },
+      ].map((p, i) => (
+        <motion.div key={i}
+          animate={{ y: [0, -16, 0], opacity: [0.15, 0.45, 0.15] }}
+          transition={{ repeat: Infinity, duration: p.dur, delay: i * 0.8, ease: 'easeInOut' }}
+          className="absolute rounded-full"
+          style={{ width: p.size, height: p.size, top: p.top, left: p.left, background: panel.accent }}
+        />
+      ))}
+
+      {/* Animated sweeping line */}
+      <motion.div
+        animate={{ x: ['-100%', '200%'] }}
+        transition={{ duration: 18 + index * 2, repeat: Infinity, ease: 'linear' }}
+        className="absolute h-[1px] w-[160px] top-1/2 z-0"
+        style={{ background: `linear-gradient(90deg, transparent, ${panel.accent}30, transparent)` }}
+      />
+
+      {/* Corner L-brackets */}
+      <div className="absolute top-5 left-5 w-6 h-[2px]" style={{ background: panel.accent, opacity: 0.25 }} />
+      <div className="absolute top-5 left-5 w-[2px] h-6" style={{ background: panel.accent, opacity: 0.25 }} />
+      <div className="absolute bottom-5 right-5 w-6 h-[2px]" style={{ background: panel.accent, opacity: 0.25 }} />
+      <div className="absolute bottom-5 right-5 w-[2px] h-6" style={{ background: panel.accent, opacity: 0.25 }} />
+
+      {/* Rotating rings */}
+      {[100, 70].map((size, i) => (
+        <motion.div key={i}
+          animate={{ rotate: (i % 2 === 0 ? 1 : -1) * 360 }}
+          transition={{ duration: 25 + i * 10, repeat: Infinity, ease: 'linear' }}
+          className="absolute bottom-8 right-8 rounded-full border border-dashed"
+          style={{ width: size, height: size, borderColor: panel.accent, opacity: 0.08 + i * 0.04 }}
+        />
+      ))}
+
+      {/* Content overlay — slides up on hover */}
+      <div className="absolute inset-0 flex flex-col justify-end p-8 md:p-10 z-10">
+        <div>
+          <div className="text-[9px] tracking-[0.28em] uppercase mb-2 font-semibold"
+            style={{ color: panel.accent }}>
+            {panel.label}
+          </div>
+          <h3 className="font-serif text-2xl md:text-3xl text-[#111827] mb-1">{panel.title}</h3>
+          <p className="font-serif italic text-sm text-[#4b5563] mb-4">{panel.subtitle}</p>
+
+          {/* Description — visible on wide panels, hover on small */}
+          <p className={`text-sm text-[#4b5563] font-light leading-relaxed mb-5 max-w-lg ${isWide ? 'block' : 'hidden md:block'}`}>
+            {panel.description}
+          </p>
+
+          <div className="flex flex-wrap gap-2">
+            {panel.tags.map(tag => (
+              <span key={tag} className="text-[9px] tracking-widest uppercase px-3 py-1.5 border bg-white/60"
+                style={{ color: panel.accent, borderColor: `${panel.accent}30` }}>
+                {tag}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Hover border */}
+      <div className="absolute inset-0 border-2 border-transparent group-hover:border-[#c9a96e]/20 transition-all duration-500 pointer-events-none" />
+      <div className="absolute bottom-0 left-0 right-0 h-[3px] origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500"
+        style={{ background: `linear-gradient(90deg, ${panel.accent}, transparent)` }} />
+    </motion.div>
   );
 }
 
 export default function Gallery() {
+  const [activeFilter, setActiveFilter] = useState("All");
+
+  const filtered = activeFilter === "All"
+    ? PANELS
+    : PANELS.filter(p => p.category === activeFilter);
+
   return (
     <div className="bg-white min-h-screen">
 
       {/* ── PAGE HEADER ── */}
-      <section className="pt-40 pb-20 px-6 md:px-14 lg:px-20 text-center relative overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: 'radial-gradient(rgba(17,24,39,0.05) 1px, transparent 1px)', backgroundSize: '24px 24px' }} />
-        <motion.div initial="hidden" animate="visible" variants={stagger} className="relative z-10 max-w-2xl mx-auto">
-          <motion.div variants={fadeInUp} className="flex items-center justify-center gap-4 mb-6">
-            <div className="w-10 h-[1px]" style={{ background: GOLD }} />
-            <SectionLabel>Visual Journey</SectionLabel>
-            <div className="w-10 h-[1px]" style={{ background: GOLD }} />
+      <section className="pt-44 pb-16 px-6 md:px-14 lg:px-20 relative overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none opacity-[0.04]"
+          style={{ backgroundImage: 'radial-gradient(#111827 1px, transparent 1px)', backgroundSize: '24px 24px' }} />
+
+        {/* Large serif bg text */}
+        <div className="absolute top-8 right-8 font-serif leading-none select-none pointer-events-none text-[#c9a96e] opacity-[0.04]"
+          style={{ fontSize: '18rem' }}>
+          G
+        </div>
+
+        <motion.div initial="hidden" animate="visible" variants={stagger}
+          className="relative z-10 max-w-3xl">
+          <motion.div variants={fadeInUp} className="flex items-center gap-4 mb-6">
+            <div className="w-12 h-[1px]" style={{ background: GOLD }} />
+            <p className="text-[9px] uppercase tracking-[0.35em] font-semibold" style={{ color: GOLD }}>Visual Journey</p>
           </motion.div>
-          <motion.h1 variants={fadeInUp} className="font-serif text-5xl md:text-6xl text-[#111827] leading-tight mb-6">
-            The Hotel Thamel<br /><span className="italic" style={{ color: GOLD }}>Experience</span>
+          <motion.h1 variants={fadeInUp}
+            className="font-serif text-5xl md:text-6xl lg:text-7xl text-[#111827] leading-tight mb-6">
+            The Hotel Thamel<br />
+            <span className="italic" style={{ color: GOLD }}>Experience</span>
           </motion.h1>
-          <motion.p variants={fadeInUp} className="text-[#4b5563] text-lg font-light leading-relaxed">
+          <motion.p variants={fadeInUp} className="text-[#4b5563] text-lg font-light leading-relaxed max-w-xl">
             A curated journey through luxury, wellness, and authentic Nepalese hospitality — told through space, light, and design.
           </motion.p>
         </motion.div>
       </section>
 
-      {/* ── 1. HOTEL EXPERIENCE ── */}
-      <section className="py-24 px-6 md:px-14 lg:px-20 bg-[#faf8f4]">
-        <div className="max-w-7xl mx-auto">
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp} className="mb-14">
-            <SectionLabel>Hotel Experience</SectionLabel>
-            <h2 className="font-serif text-4xl text-[#111827]">Where Every Detail Matters</h2>
-          </motion.div>
-
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}
-            className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {/* Feature panel — large */}
-            <motion.div variants={fadeInUp}
-              className="md:col-span-2 relative overflow-hidden rounded-none min-h-[360px] flex items-end p-10 group cursor-pointer"
-              style={{ background: `linear-gradient(135deg, #f5f0e8 0%, #ede5d4 100%)` }}
-              whileHover={{ scale: 1.01 }}
-              transition={{ duration: 0.4 }}
+      {/* ── FILTER BAR ── */}
+      <div className="sticky top-[72px] z-30 bg-white/95 backdrop-blur-sm border-b border-[#f0f0f0] shadow-sm">
+        <div className="px-6 md:px-14 lg:px-20 py-4 flex gap-2 overflow-x-auto scrollbar-hide">
+          {CATEGORIES.map(cat => (
+            <button
+              key={cat}
+              onClick={() => setActiveFilter(cat)}
+              className="whitespace-nowrap text-[9px] uppercase tracking-widest px-5 py-2.5 transition-all duration-200 shrink-0"
+              style={activeFilter === cat
+                ? { background: GOLD, color: 'white' }
+                : { background: 'transparent', color: '#6b7280', border: '1px solid #f0f0f0' }}
             >
-              {/* Decorative serif bg text */}
-              <div className="absolute top-6 right-6 font-serif text-[8rem] leading-none select-none pointer-events-none"
-                style={{ color: GOLD, opacity: 0.07 }}>25+</div>
-              {/* Corner L-shapes */}
-              <div className="absolute top-4 left-4 w-6 h-[1px]" style={{ background: GOLD, opacity: 0.3 }} />
-              <div className="absolute top-4 left-4 w-[1px] h-6" style={{ background: GOLD, opacity: 0.3 }} />
-              <div className="absolute bottom-4 right-4 w-6 h-[1px]" style={{ background: GOLD, opacity: 0.3 }} />
-              <div className="absolute bottom-4 right-4 w-[1px] h-6" style={{ background: GOLD, opacity: 0.3 }} />
+              {cat}
+            </button>
+          ))}
+        </div>
+      </div>
 
-              <div className="relative z-10">
-                <div className="text-[9px] tracking-widest uppercase mb-3 font-medium" style={{ color: GOLD }}>Est. 1999 · Thamel, Kathmandu</div>
-                <h3 className="font-serif text-3xl text-[#111827] mb-2">25 Years of Refined Hospitality</h3>
-                <p className="text-[#4b5563] text-sm font-light max-w-xs">A landmark of luxury and cultural warmth at the heart of Kathmandu.</p>
-              </div>
-            </motion.div>
-
-            {/* Stat panel */}
-            <motion.div variants={fadeInUp} className="flex flex-col gap-4">
-              {[
-                { icon: Key, label: "84 Rooms", sub: "Elegantly appointed" },
-                { icon: Users, label: "15,000+ Guests", sub: "Served with pride" },
-                { icon: Star, label: "4.9 Rating", sub: "Google & TripAdvisor" },
-              ].map((item, i) => (
-                <motion.div key={i} whileHover={{ x: 4 }} className="flex-1 bg-white border border-[#f0f0f0] p-6 flex items-center gap-5 group cursor-pointer shadow-sm hover:shadow-md transition-shadow">
-                  <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0 border border-[#f0f0f0] group-hover:border-[#c9a96e] transition-colors">
-                    <item.icon className="w-4 h-4" style={{ color: GOLD }} />
-                  </div>
-                  <div>
-                    <div className="font-serif text-lg text-[#111827]">{item.label}</div>
-                    <div className="text-xs text-[#9ca3af] font-light">{item.sub}</div>
-                  </div>
-                </motion.div>
+      {/* ── GALLERY GRID ── */}
+      <section className="py-16 px-6 md:px-14 lg:px-20">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeFilter}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.4 }}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"
+          >
+            <motion.div
+              initial="hidden" animate="visible" variants={stagger}
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 col-span-full"
+            >
+              {filtered.map((panel, i) => (
+                <GalleryPanel key={panel.id} panel={panel} index={i} />
               ))}
             </motion.div>
           </motion.div>
-        </div>
+        </AnimatePresence>
       </section>
 
-      {/* ── 2. ROOMS ── */}
-      <section className="py-24 px-6 md:px-14 lg:px-20 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp} className="mb-14">
-            <SectionLabel>Accommodation</SectionLabel>
-            <h2 className="font-serif text-4xl text-[#111827]">Luxurious Retreats</h2>
-          </motion.div>
-
+      {/* ── STATS STRIP ── */}
+      <section className="py-16 bg-[#faf8f4] border-y border-[#f0f0f0]">
+        <div className="px-6 md:px-14 lg:px-20 max-w-6xl mx-auto">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             {[
-              { name: "Super Deluxe Twin", price: "$60", area: "32m²", desc: "Twin beds, city view, premium finish" },
-              { name: "Super Deluxe Room", price: "$60", area: "35m²", desc: "King bed, refined interiors" },
-              { name: "Family Room", price: "$55", area: "52m²", desc: "Separate living area, 4 guests" },
-              { name: "Standard Deluxe", price: "$50", area: "28m²", desc: "Smart, elegant, well-appointed" },
-            ].map((room, i) => (
-              <motion.div key={i} variants={fadeInUp}
-                whileHover={{ y: -8, boxShadow: "0 20px 60px rgba(201,169,110,0.12)" }}
-                transition={{ duration: 0.35 }}
-                className="bg-white border border-[#f0f0f0] overflow-hidden cursor-pointer"
-              >
-                {/* Visual panel */}
-                <div className="relative h-48 overflow-hidden flex items-center justify-center"
-                  style={{ background: `linear-gradient(${135 + i * 30}deg, #f5f0e8, #e8dfc8)` }}>
-                  <div className="absolute inset-0 pointer-events-none"
-                    style={{ backgroundImage: 'radial-gradient(rgba(201,169,110,0.1) 1px, transparent 1px)', backgroundSize: '16px 16px' }} />
-                  <span className="font-serif text-[6rem] leading-none select-none" style={{ color: GOLD, opacity: 0.12 }}>{i + 1}</span>
-                  <div className="absolute top-3 left-3 text-[8px] tracking-widest uppercase font-medium" style={{ color: GOLD }}>{room.area}</div>
-                  <div className="absolute bottom-0 left-0 right-0 h-[2px]" style={{ background: `linear-gradient(90deg, ${GOLD}, #a07840)` }} />
-                </div>
-                <div className="p-6">
-                  <h3 className="font-serif text-lg text-[#111827] mb-1">{room.name}</h3>
-                  <p className="text-xs text-[#6b7280] font-light mb-4 leading-relaxed">{room.desc}</p>
-                  <div className="flex justify-between items-center">
-                    <div>
-                      <span className="font-serif text-xl" style={{ color: GOLD }}>{room.price}</span>
-                      <span className="text-[10px] text-[#9ca3af] ml-1">/night</span>
-                    </div>
-                    <Button asChild variant="outline" className="rounded-none border-[#c9a96e] text-[#c9a96e] hover:bg-[#c9a96e] hover:text-white text-[10px] uppercase tracking-widest px-4 py-2 h-auto">
-                      <Link href="/contact">Book</Link>
-                    </Button>
-                  </div>
-                </div>
+              { val: "84", label: "Luxury Rooms" },
+              { val: "288K+", label: "Happy Guests" },
+              { val: "25+", label: "Years Experience" },
+              { val: "4.9★", label: "Guest Rating" },
+            ].map((stat, i) => (
+              <motion.div key={i} variants={fadeInUp}>
+                <div className="font-serif text-3xl md:text-4xl text-[#111827] mb-2">{stat.val}</div>
+                <div className="text-[9px] uppercase tracking-widest text-[#9ca3af]">{stat.label}</div>
               </motion.div>
             ))}
           </motion.div>
-        </div>
-      </section>
-
-      {/* ── 3. DINING ── */}
-      <section className="py-24 px-6 md:px-14 lg:px-20 bg-[#f8f8f8]">
-        <div className="max-w-7xl mx-auto">
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp} className="mb-14">
-            <SectionLabel>Dining</SectionLabel>
-            <h2 className="font-serif text-4xl text-[#111827]">Culinary Journeys</h2>
-          </motion.div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Garden View Korean Restaurant */}
-            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp}
-              className="relative overflow-hidden group cursor-pointer min-h-[440px]"
-              whileHover={{ scale: 1.01 }} transition={{ duration: 0.4 }}
-            >
-              {/* Background visual */}
-              <div className="absolute inset-0"
-                style={{ background: 'linear-gradient(135deg, #fdf8f0 0%, #f0e8d4 100%)' }}>
-                {/* Korean grid pattern */}
-                <div className="absolute inset-0" style={{
-                  backgroundImage: "repeating-linear-gradient(0deg,transparent,transparent 30px,rgba(201,169,110,0.06) 30px,rgba(201,169,110,0.06) 31px),repeating-linear-gradient(90deg,transparent,transparent 30px,rgba(201,169,110,0.06) 30px,rgba(201,169,110,0.06) 31px)"
-                }} />
-                <div className="absolute top-6 right-6 font-serif text-[7rem] leading-none select-none" style={{ color: GOLD, opacity: 0.07 }}>餐</div>
-              </div>
-
-              {/* Corner accents */}
-              {[['top-4 left-4', 'right'], ['top-4 right-4', 'left'], ['bottom-4 left-4', 'right'], ['bottom-4 right-4', 'left']].map(([pos], idx) => (
-                <div key={idx}>
-                  <div className={`absolute ${pos} w-5 h-[1px]`} style={{ background: GOLD, opacity: 0.25 }} />
-                  <div className={`absolute ${pos} w-[1px] h-5`} style={{ background: GOLD, opacity: 0.25 }} />
-                </div>
-              ))}
-
-              <div className="relative z-10 p-10 flex flex-col justify-end h-full min-h-[440px]">
-                <div className="mt-auto">
-                  <div className="w-10 h-10 rounded-full border flex items-center justify-center mb-6" style={{ borderColor: `${GOLD}40` }}>
-                    <UtensilsCrossed className="w-5 h-5" style={{ color: GOLD }} />
-                  </div>
-                  <div className="text-[9px] tracking-widest uppercase mb-2 font-medium" style={{ color: GOLD }}>Dining Experience</div>
-                  <h3 className="font-serif text-3xl text-[#111827] mb-3">Garden View Korean Restaurant</h3>
-                  <p className="text-[#4b5563] text-sm font-light leading-relaxed mb-6 max-w-xs">
-                    Authentic Korean cuisine served in a serene garden setting. Master chefs, finest ingredients.
-                  </p>
-                  <div className="flex gap-3">
-                    {["Korean BBQ", "Garden Terrace", "Set Menus"].map(tag => (
-                      <span key={tag} className="text-[9px] tracking-wider uppercase text-[#6b7280] border border-[#e5e7eb] px-3 py-1">{tag}</span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Skyz Lounge */}
-            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp}
-              className="relative overflow-hidden group cursor-pointer min-h-[440px]"
-              whileHover={{ scale: 1.01 }} transition={{ duration: 0.4 }}
-            >
-              <div className="absolute inset-0" style={{ background: 'linear-gradient(160deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)' }}>
-                {/* Stars */}
-                {[...Array(18)].map((_, i) => (
-                  <div key={i} className="absolute rounded-full bg-white"
-                    style={{ width: i % 3 === 0 ? 2 : 1, height: i % 3 === 0 ? 2 : 1, top: `${Math.random() * 60}%`, left: `${Math.random() * 100}%`, opacity: 0.3 + Math.random() * 0.5 }} />
-                ))}
-                {/* Skyline silhouette */}
-                <div className="absolute bottom-0 left-0 right-0 flex items-end justify-around px-6 gap-2" style={{ height: '35%' }}>
-                  {[55, 80, 40, 100, 65, 45, 90, 50].map((h, i) => (
-                    <div key={i} className="flex-1 rounded-t-sm" style={{ height: `${h}%`, background: 'rgba(201,169,110,0.08)' }} />
-                  ))}
-                </div>
-                {/* Glow */}
-                <div className="absolute top-12 left-1/2 -translate-x-1/2 w-48 h-48 rounded-full blur-[80px]" style={{ background: GOLD, opacity: 0.06 }} />
-              </div>
-
-              <div className="relative z-10 p-10 flex flex-col justify-end h-full min-h-[440px]">
-                <div className="mt-auto">
-                  <div className="w-10 h-10 rounded-full border flex items-center justify-center mb-6" style={{ borderColor: `${GOLD}40` }}>
-                    <Coffee className="w-5 h-5" style={{ color: GOLD }} />
-                  </div>
-                  <div className="text-[9px] tracking-widest uppercase mb-2 font-medium" style={{ color: GOLD }}>Lounge & Bar</div>
-                  <h3 className="font-serif text-3xl text-white mb-3">Skyz Lounge</h3>
-                  <p className="text-white/60 text-sm font-light leading-relaxed mb-6 max-w-xs">
-                    Rooftop luxury above Kathmandu. Signature cocktails, panoramic views, and live music.
-                  </p>
-                  <div className="flex gap-3">
-                    {["Rooftop", "Cocktails", "Live Music"].map(tag => (
-                      <span key={tag} className="text-[9px] tracking-wider uppercase text-white/40 border border-white/10 px-3 py-1">{tag}</span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── 4. SPA & WELLNESS ── */}
-      <section className="py-24 px-6 md:px-14 lg:px-20 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp} className="mb-14">
-            <SectionLabel>Spa & Wellness</SectionLabel>
-            <h2 className="font-serif text-4xl text-[#111827]">Restore. Renew. Revive.</h2>
-          </motion.div>
-
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}
-            className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {[
-              { icon: Sparkles, label: "Signature Massage", desc: "Full body relaxation therapy", accent: "#f5f0e8" },
-              { icon: Wind, label: "Steam Therapy", desc: "Deep cleansing & rejuvenation", accent: "#eef5f0" },
-              { icon: Leaf, label: "Sauna", desc: "Authentic dry heat experience", accent: "#f5f0e8" },
-              { icon: Heart, label: "Couples Package", desc: "Shared luxury wellness journey", accent: "#f5f0f5" },
-              { icon: Star, label: "Wellness Retreat", desc: "Multi-day holistic programs", accent: "#f5f0e8" },
-              { icon: Sparkles, label: "Relaxation Area", desc: "Quiet sanctuary of peace", accent: "#eef5f0" },
-            ].map((item, i) => (
-              <motion.div key={i} variants={fadeInUp}
-                whileHover={{ y: -6, boxShadow: "0 16px 40px rgba(201,169,110,0.1)" }}
-                transition={{ duration: 0.3 }}
-                className="p-8 cursor-pointer border border-[#f0f0f0] relative overflow-hidden"
-                style={{ background: item.accent }}
-              >
-                <div className="absolute bottom-0 right-0 w-20 h-20 rounded-full blur-[40px] pointer-events-none" style={{ background: GOLD, opacity: 0.05 }} />
-                <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center mb-5 border border-[#e5e7eb]">
-                  <item.icon className="w-5 h-5" style={{ color: GOLD }} />
-                </div>
-                <h3 className="font-serif text-xl text-[#111827] mb-2">{item.label}</h3>
-                <p className="text-xs text-[#6b7280] font-light leading-relaxed">{item.desc}</p>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ── 5. NEPAL HERITAGE ── */}
-      <section className="py-24 px-6 md:px-14 lg:px-20 bg-[#faf8f4]">
-        <div className="max-w-7xl mx-auto">
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp} className="mb-14">
-            <SectionLabel>Nepal Heritage</SectionLabel>
-            <h2 className="font-serif text-4xl text-[#111827]">The Soul of Thamel</h2>
-          </motion.div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Large heritage panel */}
-            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp}
-              className="lg:col-span-2 relative overflow-hidden min-h-[400px] flex items-end p-10"
-              style={{ background: 'linear-gradient(135deg, #f5ede0 0%, #ede0c8 100%)' }}
-            >
-              <div className="absolute top-0 right-0 w-80 h-80 pointer-events-none select-none overflow-hidden">
-                <div className="font-serif text-[12rem] leading-none" style={{ color: GOLD, opacity: 0.06 }}>🇳🇵</div>
-              </div>
-              {/* Mandala-inspired ring decorations */}
-              {[240, 180, 120].map((size, i) => (
-                <div key={i} className="absolute top-1/2 right-16 -translate-y-1/2 rounded-full border"
-                  style={{ width: size, height: size, borderColor: `${GOLD}${12 - i * 3}`, opacity: 0.4 - i * 0.1, marginRight: 0 }} />
-              ))}
-              <div className="relative z-10">
-                <div className="text-[9px] tracking-widest uppercase mb-3 font-medium" style={{ color: GOLD }}>Atithi Devo Bhava · Guest is God</div>
-                <h3 className="font-serif text-3xl text-[#111827] mb-4">25 Years Rooted in<br />Nepalese Warmth</h3>
-                <p className="text-[#4b5563] text-sm font-light leading-relaxed max-w-md">
-                  Our hotel is a living tribute to the ancient Nepalese tradition of hospitality. Every gesture, every service, every detail reflects the rich cultural heritage of Kathmandu.
-                </p>
-              </div>
-            </motion.div>
-
-            {/* Heritage cards */}
-            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}
-              className="flex flex-col gap-4">
-              {[
-                { icon: MapPin, label: "Thamel District", sub: "Cultural heart of Kathmandu" },
-                { icon: Mountain, label: "Himalayan Views", sub: "Steps from mountain vistas" },
-                { icon: Heart, label: "Local Traditions", sub: "Authentic Nepalese warmth" },
-              ].map((item, i) => (
-                <motion.div key={i} variants={fadeInUp}
-                  whileHover={{ x: 4 }} transition={{ duration: 0.25 }}
-                  className="bg-white border border-[#f0f0f0] p-6 flex items-center gap-5 cursor-pointer hover:border-[#c9a96e] transition-colors"
-                >
-                  <div className="w-10 h-10 rounded-full bg-[#faf8f4] flex items-center justify-center shrink-0 border border-[#f0f0f0]">
-                    <item.icon className="w-4 h-4" style={{ color: GOLD }} />
-                  </div>
-                  <div>
-                    <div className="font-serif text-base text-[#111827]">{item.label}</div>
-                    <div className="text-xs text-[#9ca3af] font-light">{item.sub}</div>
-                  </div>
-                </motion.div>
-              ))}
-            </motion.div>
-          </div>
         </div>
       </section>
 
       {/* ── CTA ── */}
-      <section className="py-28 px-6 text-center bg-white border-t border-[#f0f0f0]">
-        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger} className="max-w-xl mx-auto">
+      <section className="py-28 px-6 text-center bg-white">
+        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}
+          className="max-w-xl mx-auto">
           <motion.div variants={fadeInUp} className="w-12 h-[1px] mx-auto mb-8" style={{ background: GOLD }} />
           <motion.h2 variants={fadeInUp} className="font-serif text-4xl md:text-5xl text-[#111827] mb-4 leading-tight">
             Begin Your<br /><span className="italic" style={{ color: GOLD }}>Luxury Journey</span>
@@ -351,10 +356,12 @@ export default function Gallery() {
             Experience the pinnacle of hospitality in the heart of Kathmandu.
           </motion.p>
           <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild className="rounded-none px-10 py-6 h-auto uppercase tracking-widest text-xs" style={{ background: GOLD, color: 'white' }}>
+            <Button asChild className="rounded-none px-12 py-7 h-auto uppercase tracking-widest text-xs shadow-md hover:shadow-lg transition-shadow"
+              style={{ background: GOLD, color: 'white' }}>
               <Link href="/contact">Book Your Stay</Link>
             </Button>
-            <Button asChild variant="outline" className="rounded-none px-10 py-6 h-auto uppercase tracking-widest text-xs border-[#111827] text-[#111827] hover:bg-[#111827] hover:text-white bg-transparent">
+            <Button asChild variant="outline"
+              className="rounded-none px-12 py-7 h-auto uppercase tracking-widest text-xs border-[#111827] text-[#111827] hover:bg-[#111827] hover:text-white bg-transparent">
               <Link href="/contact">Contact Us</Link>
             </Button>
           </motion.div>
