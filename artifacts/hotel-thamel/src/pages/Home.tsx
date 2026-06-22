@@ -71,7 +71,7 @@ export default function Home() {
     <div className="min-h-screen bg-white">
       
       {/* SECTION 1: HERO */}
-      <section className="relative h-[100dvh] overflow-hidden bg-white">
+      <section className="relative overflow-hidden bg-white">
         {/* Layer 1: Dot grid */}
         <div className="absolute inset-0 z-0 opacity-[0.06] pointer-events-none" 
              style={{ backgroundImage: 'radial-gradient(#111827 1px, transparent 1px)', backgroundSize: '24px 24px' }} />
@@ -145,228 +145,194 @@ export default function Home() {
            ))}
         </div>
 
-        {/* Content */}
-        <div className="absolute bottom-[200px] md:bottom-[220px] left-0 right-0 z-20 px-6 md:px-14 lg:px-20 pb-10">
-          <div className="max-w-4xl">
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8 }} className="flex items-center gap-4 mb-6">
-              <div className="w-12 h-[2px] bg-[#c9a96e] opacity-80" />
-              <span className="text-[#c9a96e] text-xs tracking-[0.4em] uppercase font-medium">THAMEL · KATHMANDU · NEPAL</span>
-            </motion.div>
+        {/* Flex content wrapper — gives proper vertical centering */}
+        <div className="relative z-20 flex flex-col" style={{ minHeight: '100dvh' }}>
 
-            <motion.h1 
-              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.1 }}
-              className="font-serif text-[#111827] leading-[1.1] mb-4"
-              style={{ fontSize: "clamp(3.5rem, 6vw, 6rem)" }}
-            >
-              Experience Luxury,<br />
-              <span className="italic text-gradient-gold">Wellness & Comfort</span>
-            </motion.h1>
+          {/* Spacer so content clears the fixed navbar */}
+          <div className="h-24 shrink-0" />
 
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2 }} className="mb-8">
-               <p className="font-serif text-xl md:text-2xl text-[#111827]/70 italic">at Hotel Thamel Park & Spa</p>
-            </motion.div>
+          {/* Main content — fills remaining space and centres vertically */}
+          <div className="flex-1 flex flex-col justify-center px-6 md:px-14 lg:px-20 py-10">
+            <div className="max-w-3xl">
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8 }} className="flex items-center gap-4 mb-8">
+                <div className="w-12 h-[2px] bg-[#c9a96e] opacity-80" />
+                <span className="text-[#c9a96e] text-xs tracking-[0.4em] uppercase font-medium">THAMEL · KATHMANDU · NEPAL</span>
+              </motion.div>
 
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.3 }} className="flex flex-col md:flex-row md:items-center gap-8 mb-4">
-              <p className="text-[#4b5563] max-w-md text-lg font-light leading-relaxed">
-                A sanctuary of luxury, wellness and culture in Kathmandu's heart.
-              </p>
-              <div className="flex gap-4">
-                <Button asChild data-testid="hero-btn-book" className="rounded-none bg-[#c9a96e] text-white hover:bg-[#a07840] px-8 py-6 h-auto tracking-widest uppercase text-xs">
-                  <Link href="/contact">Book Now</Link>
+              <motion.h1
+                initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, delay: 0.1 }}
+                className="font-serif text-[#111827] leading-[1.06] mb-6"
+                style={{ fontSize: "clamp(2.8rem, 5.5vw, 5.5rem)" }}
+              >
+                Where Nepalese<br />
+                Hospitality Meets<br />
+                <span className="italic text-gradient-gold">Timeless Luxury</span>
+              </motion.h1>
+
+              <motion.p
+                initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2 }}
+                className="font-serif text-lg md:text-xl text-[#111827]/55 italic mb-10"
+              >
+                Hotel Thamel Park &amp; Spa — A refined escape in the heart of Kathmandu
+              </motion.p>
+
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.3 }} className="flex flex-col sm:flex-row gap-4 mb-14">
+                <Button asChild data-testid="hero-btn-book" className="rounded-none bg-[#c9a96e] text-white hover:bg-[#a07840] px-10 py-6 h-auto tracking-widest uppercase text-xs">
+                  <Link href="/contact">Book Your Stay</Link>
                 </Button>
-                <Button asChild data-testid="hero-btn-explore" variant="outline" className="rounded-none border-[#111827] text-[#111827] hover:bg-[#111827] hover:text-white px-8 py-6 h-auto tracking-widest uppercase text-xs bg-transparent">
+                <Button asChild data-testid="hero-btn-explore" variant="outline" className="rounded-none border-[#111827] text-[#111827] hover:bg-[#111827] hover:text-white px-10 py-6 h-auto tracking-widest uppercase text-xs bg-transparent">
                   <Link href="/rooms">Explore Rooms</Link>
                 </Button>
-              </div>
-            </motion.div>
-          </div>
-        </div>
+              </motion.div>
 
-        {/* Stats Row */}
-        <motion.div 
-          initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}
-          className="absolute bottom-[96px] left-0 right-0 z-20 px-6 md:px-14 lg:px-20 hidden md:flex items-center gap-10 lg:gap-14"
-        >
-          <div className="flex items-center gap-3">
-             <div className="font-serif text-2xl text-[#111827]"><AnimatedNumber value={84} /></div>
-             <div className="text-[10px] uppercase tracking-widest text-[#4b5563]">ROOMS</div>
-          </div>
-          <div className="w-px h-6 bg-[#f0f0f0]" />
-          <div className="flex items-center gap-3">
-             <div className="font-serif text-2xl text-[#111827]"><AnimatedNumber value={15000} />+</div>
-             <div className="text-[10px] uppercase tracking-widest text-[#4b5563]">HAPPY GUESTS</div>
-          </div>
-          <div className="w-px h-6 bg-[#f0f0f0]" />
-          <div className="flex items-center gap-3">
-             <div className="font-serif text-2xl text-[#111827]"><AnimatedNumber value={25} />+</div>
-             <div className="text-[10px] uppercase tracking-widest text-[#4b5563]">YEARS EXPERIENCE</div>
-          </div>
-          <div className="w-px h-6 bg-[#f0f0f0]" />
-          <div className="flex items-center gap-3">
-             <div className="font-serif text-2xl text-[#111827]">Premium</div>
-             <div className="text-[10px] uppercase tracking-widest text-[#4b5563]">SPA & WELLNESS</div>
-          </div>
-        </motion.div>
-
-        {/* Interactive Booking Widget */}
-        <motion.div 
-          initial={{ y: "100%" }} animate={{ y: 0 }} transition={{ delay: 0.5, duration: 0.5, ease: "easeOut" }}
-          className="absolute bottom-0 left-0 right-0 z-30 bg-white border-t border-[#f0f0f0] shadow-[0_-10px_40px_rgba(0,0,0,0.03)]"
-        >
-           <div className="flex flex-col md:flex-row relative">
-              {/* Check In */}
-              <div className="flex-1 px-6 py-4 border-b md:border-b-0 md:border-r border-[#f0f0f0] group focus-within:border-[#c9a96e] focus-within:bg-[#faf8f4] transition-colors relative" data-testid="booking-checkin">
-                 <div className="flex items-center gap-4">
-                    <Calendar className="text-[#c9a96e] w-5 h-5 shrink-0" />
-                    <div className="w-full">
-                       <label className="block text-[10px] uppercase tracking-widest text-[#c9a96e] font-medium mb-1">Check In</label>
-                       <input 
-                         type="date" 
-                         value={checkIn}
-                         onChange={(e) => setCheckIn(e.target.value)}
-                         className="w-full bg-transparent border-none p-0 text-sm font-medium text-[#111827] focus:ring-0 cursor-pointer"
-                       />
+              {/* Stats — inline, below buttons */}
+              <motion.div
+                initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}
+                className="flex flex-wrap items-center gap-8 lg:gap-12 pt-8 border-t border-[#ebebeb]"
+              >
+                {[
+                  { val: <><AnimatedNumber value={84} /></>, label: "Rooms" },
+                  { val: <><AnimatedNumber value={15000} />+</>, label: "Happy Guests" },
+                  { val: <><AnimatedNumber value={25} />+</>, label: "Years Experience" },
+                  { val: <>Premium</>, label: "Spa & Wellness" },
+                ].map((s, i) => (
+                  <div key={i} className="flex items-center gap-8">
+                    <div>
+                      <div className="font-serif text-2xl text-[#111827]">{s.val}</div>
+                      <div className="text-[9px] uppercase tracking-widest text-[#9ca3af] mt-1">{s.label}</div>
                     </div>
-                 </div>
+                    {i < 3 && <div className="hidden sm:block w-px h-8 bg-[#ebebeb]" />}
+                  </div>
+                ))}
+              </motion.div>
+            </div>
+          </div>
+
+          {/* Booking bar — bottom of flex container, NOT absolute */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6, duration: 0.5 }}
+            className="shrink-0 bg-white/95 backdrop-blur-sm border-t border-[#e5e7eb] shadow-[0_-6px_24px_rgba(0,0,0,0.04)]"
+          >
+            <div className="flex flex-col md:flex-row">
+              {/* Check In */}
+              <div className="flex-1 px-6 py-5 border-b md:border-b-0 md:border-r border-[#f0f0f0] focus-within:bg-[#faf8f4] transition-colors" data-testid="booking-checkin">
+                <div className="flex items-center gap-4">
+                  <Calendar className="text-[#c9a96e] w-5 h-5 shrink-0" />
+                  <div className="w-full">
+                    <label className="block text-[9px] uppercase tracking-widest text-[#c9a96e] font-semibold mb-1">Check In</label>
+                    <input type="date" value={checkIn} onChange={(e) => setCheckIn(e.target.value)}
+                      className="w-full bg-transparent border-none p-0 text-sm font-medium text-[#111827] focus:outline-none cursor-pointer" />
+                  </div>
+                </div>
               </div>
 
               {/* Check Out */}
-              <div className="flex-1 px-6 py-4 border-b md:border-b-0 md:border-r border-[#f0f0f0] group focus-within:border-[#c9a96e] focus-within:bg-[#faf8f4] transition-colors relative" data-testid="booking-checkout">
-                 <div className="flex items-center gap-4">
-                    <Calendar className="text-[#c9a96e] w-5 h-5 shrink-0" />
-                    <div className="w-full">
-                       <label className="block text-[10px] uppercase tracking-widest text-[#c9a96e] font-medium mb-1">Check Out</label>
-                       <input 
-                         type="date" 
-                         value={checkOut}
-                         onChange={(e) => setCheckOut(e.target.value)}
-                         min={checkIn}
-                         className="w-full bg-transparent border-none p-0 text-sm font-medium text-[#111827] focus:ring-0 cursor-pointer"
-                       />
-                    </div>
-                 </div>
+              <div className="flex-1 px-6 py-5 border-b md:border-b-0 md:border-r border-[#f0f0f0] focus-within:bg-[#faf8f4] transition-colors" data-testid="booking-checkout">
+                <div className="flex items-center gap-4">
+                  <Calendar className="text-[#c9a96e] w-5 h-5 shrink-0" />
+                  <div className="w-full">
+                    <label className="block text-[9px] uppercase tracking-widest text-[#c9a96e] font-semibold mb-1">Check Out</label>
+                    <input type="date" value={checkOut} onChange={(e) => setCheckOut(e.target.value)} min={checkIn}
+                      className="w-full bg-transparent border-none p-0 text-sm font-medium text-[#111827] focus:outline-none cursor-pointer" />
+                  </div>
+                </div>
               </div>
 
               {/* Room Type */}
-              <div 
-                className="flex-1 px-6 py-4 border-b md:border-b-0 md:border-r border-[#f0f0f0] hover:bg-[#faf8f4] cursor-pointer transition-colors relative" 
+              <div className="flex-1 px-6 py-5 border-b md:border-b-0 md:border-r border-[#f0f0f0] hover:bg-[#faf8f4] cursor-pointer transition-colors relative"
                 onClick={() => { setShowRoomDropdown(!showRoomDropdown); setShowGuestDropdown(false); }}
                 data-testid="booking-room"
               >
-                 <div className="flex items-center gap-4">
-                    <Key className="text-[#c9a96e] w-5 h-5 shrink-0" />
-                    <div className="w-full">
-                       <div className="text-[10px] uppercase tracking-widest text-[#c9a96e] font-medium mb-1">Room Type</div>
-                       <div className="text-sm font-medium text-[#111827] truncate">{roomType}</div>
-                    </div>
-                 </div>
-                 
-                 <AnimatePresence>
-                   {showRoomDropdown && (
-                     <motion.div 
-                       initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }}
-                       className="absolute bottom-full left-0 w-full bg-white shadow-xl border border-[#f0f0f0] mb-2 py-2 z-40"
-                       onClick={(e) => e.stopPropagation()}
-                     >
-                       {[
-                         { name: "Super Deluxe Twin", price: "$60/night" },
-                         { name: "Super Deluxe Room", price: "$60/night" },
-                         { name: "Family Room", price: "$55/night" },
-                         { name: "Standard Deluxe Room", price: "$50/night" }
-                       ].map(rt => (
-                         <div 
-                           key={rt.name}
-                           className="px-6 py-3 hover:bg-[#f8f8f8] cursor-pointer flex justify-between items-center"
-                           onClick={() => { setRoomType(rt.name); setShowRoomDropdown(false); }}
-                         >
-                            <span className="text-sm font-medium text-[#111827]">{rt.name}</span>
-                            <span className="text-xs text-[#c9a96e]">{rt.price}</span>
-                         </div>
-                       ))}
-                     </motion.div>
-                   )}
-                 </AnimatePresence>
+                <div className="flex items-center gap-4">
+                  <Key className="text-[#c9a96e] w-5 h-5 shrink-0" />
+                  <div className="w-full">
+                    <div className="text-[9px] uppercase tracking-widest text-[#c9a96e] font-semibold mb-1">Room Type</div>
+                    <div className="text-sm font-medium text-[#111827] truncate">{roomType}</div>
+                  </div>
+                </div>
+                <AnimatePresence>
+                  {showRoomDropdown && (
+                    <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 8 }}
+                      className="absolute bottom-full left-0 w-full bg-white shadow-xl border border-[#f0f0f0] mb-1 py-2 z-50"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {[
+                        { name: "Super Deluxe Twin", price: "$60/night" },
+                        { name: "Super Deluxe Room", price: "$60/night" },
+                        { name: "Family Room", price: "$55/night" },
+                        { name: "Standard Deluxe Room", price: "$50/night" },
+                      ].map(rt => (
+                        <div key={rt.name} className="px-6 py-3 hover:bg-[#f8f8f8] cursor-pointer flex justify-between items-center"
+                          onClick={() => { setRoomType(rt.name); setShowRoomDropdown(false); }}>
+                          <span className="text-sm font-medium text-[#111827]">{rt.name}</span>
+                          <span className="text-xs text-[#c9a96e]">{rt.price}</span>
+                        </div>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
 
               {/* Guests */}
-              <div 
-                className="flex-1 px-6 py-4 hover:bg-[#faf8f4] cursor-pointer transition-colors relative"
+              <div className="flex-1 px-6 py-5 hover:bg-[#faf8f4] cursor-pointer transition-colors relative"
                 onClick={() => { setShowGuestDropdown(!showGuestDropdown); setShowRoomDropdown(false); }}
                 data-testid="booking-guests"
               >
-                 <div className="flex items-center gap-4">
-                    <Users className="text-[#c9a96e] w-5 h-5 shrink-0" />
-                    <div className="w-full">
-                       <div className="text-[10px] uppercase tracking-widest text-[#c9a96e] font-medium mb-1">Guests</div>
-                       <div className="text-sm font-medium text-[#111827] truncate">{adults} Adults, {children} Children</div>
-                    </div>
-                 </div>
-
-                 <AnimatePresence>
-                   {showGuestDropdown && (
-                     <motion.div 
-                       initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }}
-                       className="absolute bottom-full left-0 right-0 md:right-auto md:w-80 bg-white shadow-xl border border-[#f0f0f0] mb-2 p-6 z-40 cursor-default"
-                       onClick={(e) => e.stopPropagation()}
-                     >
-                        <div className="flex items-center justify-between mb-6">
-                           <div>
-                              <div className="text-sm font-medium text-[#111827]">Adults</div>
-                              <div className="text-xs text-[#4b5563]">Ages 13 or above</div>
-                           </div>
-                           <div className="flex items-center gap-4">
-                              <button 
-                                onClick={() => setAdults(Math.max(1, adults - 1))}
-                                className="w-8 h-8 rounded-full border border-[#e5e7eb] flex items-center justify-center text-[#4b5563] hover:border-[#c9a96e] hover:text-[#c9a96e]"
-                              ><Minus className="w-4 h-4" /></button>
-                              <span className="w-4 text-center font-medium">{adults}</span>
-                              <button 
-                                onClick={() => setAdults(adults + 1)}
-                                className="w-8 h-8 rounded-full border border-[#e5e7eb] flex items-center justify-center text-[#4b5563] hover:border-[#c9a96e] hover:text-[#c9a96e]"
-                              ><Plus className="w-4 h-4" /></button>
-                           </div>
+                <div className="flex items-center gap-4">
+                  <Users className="text-[#c9a96e] w-5 h-5 shrink-0" />
+                  <div className="w-full">
+                    <div className="text-[9px] uppercase tracking-widest text-[#c9a96e] font-semibold mb-1">Guests</div>
+                    <div className="text-sm font-medium text-[#111827]">{adults} Adults, {children} Children</div>
+                  </div>
+                </div>
+                <AnimatePresence>
+                  {showGuestDropdown && (
+                    <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 8 }}
+                      className="absolute bottom-full left-0 right-0 md:right-auto md:w-80 bg-white shadow-xl border border-[#f0f0f0] mb-1 p-6 z-50 cursor-default"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {[
+                        { label: "Adults", sub: "Ages 13+", val: adults, set: setAdults, min: 1 },
+                        { label: "Children", sub: "Ages 0–12", val: children, set: setChildren, min: 0 },
+                      ].map((g) => (
+                        <div key={g.label} className="flex items-center justify-between mb-5">
+                          <div>
+                            <div className="text-sm font-medium text-[#111827]">{g.label}</div>
+                            <div className="text-xs text-[#9ca3af]">{g.sub}</div>
+                          </div>
+                          <div className="flex items-center gap-4">
+                            <button onClick={() => g.set(Math.max(g.min, g.val - 1))}
+                              className="w-8 h-8 rounded-full border border-[#e5e7eb] flex items-center justify-center hover:border-[#c9a96e] hover:text-[#c9a96e] transition-colors">
+                              <Minus className="w-3 h-3" />
+                            </button>
+                            <span className="w-4 text-center text-sm font-medium">{g.val}</span>
+                            <button onClick={() => g.set(g.val + 1)}
+                              className="w-8 h-8 rounded-full border border-[#e5e7eb] flex items-center justify-center hover:border-[#c9a96e] hover:text-[#c9a96e] transition-colors">
+                              <Plus className="w-3 h-3" />
+                            </button>
+                          </div>
                         </div>
-                        <div className="flex items-center justify-between mb-6">
-                           <div>
-                              <div className="text-sm font-medium text-[#111827]">Children</div>
-                              <div className="text-xs text-[#4b5563]">Ages 0-12</div>
-                           </div>
-                           <div className="flex items-center gap-4">
-                              <button 
-                                onClick={() => setChildren(Math.max(0, children - 1))}
-                                className="w-8 h-8 rounded-full border border-[#e5e7eb] flex items-center justify-center text-[#4b5563] hover:border-[#c9a96e] hover:text-[#c9a96e]"
-                              ><Minus className="w-4 h-4" /></button>
-                              <span className="w-4 text-center font-medium">{children}</span>
-                              <button 
-                                onClick={() => setChildren(children + 1)}
-                                className="w-8 h-8 rounded-full border border-[#e5e7eb] flex items-center justify-center text-[#4b5563] hover:border-[#c9a96e] hover:text-[#c9a96e]"
-                              ><Plus className="w-4 h-4" /></button>
-                           </div>
-                        </div>
-                        <Button 
-                          className="w-full rounded-none bg-[#111827] text-white hover:bg-[#c9a96e]"
-                          onClick={(e) => { e.stopPropagation(); setShowGuestDropdown(false); }}
-                        >Done</Button>
-                     </motion.div>
-                   )}
-                 </AnimatePresence>
+                      ))}
+                      <Button className="w-full rounded-none bg-[#111827] text-white hover:bg-[#c9a96e] mt-2"
+                        onClick={(e) => { e.stopPropagation(); setShowGuestDropdown(false); }}>Done</Button>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
 
-              {/* Button */}
-              <div className="p-0 flex items-center justify-center shrink-0 min-h-[5rem] relative">
-                 <Button 
-                   onClick={handleSearch}
-                   data-testid="booking-submit" 
-                   className="w-full md:w-auto rounded-none bg-[#c9a96e] text-white hover:bg-[#a07840] uppercase tracking-widest text-xs px-10 h-full min-h-[5rem]"
-                 >
-                   Search Availability
-                 </Button>
+              {/* CTA */}
+              <div className="flex items-stretch shrink-0">
+                <Button onClick={handleSearch} data-testid="booking-submit"
+                  className="w-full md:w-auto rounded-none bg-[#c9a96e] text-white hover:bg-[#a07840] uppercase tracking-widest text-xs px-10 min-h-[4.5rem] h-full">
+                  Search Availability
+                </Button>
               </div>
-           </div>
-           {bookingError && (
-             <div className="absolute -bottom-6 left-6 text-red-500 text-xs">{bookingError}</div>
-           )}
-        </motion.div>
+            </div>
+            {bookingError && (
+              <div className="px-6 py-2 text-red-500 text-xs border-t border-red-100 bg-red-50">{bookingError}</div>
+            )}
+          </motion.div>
+        </div>
       </section>
 
       {/* SECTION 2: HOTEL EXPERIENCE */}
