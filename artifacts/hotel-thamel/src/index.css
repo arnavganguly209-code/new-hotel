@@ -153,6 +153,23 @@
   100% { transform: translate(-50%, -50%) rotate(-360deg) translate(-10%, -10%) rotate(360deg); }
 }
 
+@keyframes tile-pulse-a {
+  0%, 100% { opacity: 0.18; }
+  50% { opacity: 0.42; }
+}
+@keyframes tile-pulse-b {
+  0%, 100% { opacity: 0.38; }
+  50% { opacity: 0.78; }
+}
+@keyframes tile-pulse-c {
+  0%, 100% { opacity: 0.28; }
+  50% { opacity: 0.60; }
+}
+
+.mosaic-tile        { animation: tile-pulse-a var(--td, 4s) var(--dl, 0s) infinite ease-in-out; }
+.mosaic-tile-gold   { animation: tile-pulse-b var(--td, 3.5s) var(--dl, 0s) infinite ease-in-out; }
+.mosaic-tile-rose   { animation: tile-pulse-c var(--td, 4.2s) var(--dl, 0s) infinite ease-in-out; }
+
 /**
  * Using the elevate system.
  * Automatic contrast adjustment.

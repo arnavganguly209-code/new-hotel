@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "wouter";
-import { motion } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -8,13 +8,107 @@ import {
   Star, MapPin, Coffee, Wifi, Car, Users, Briefcase, ChevronRight, Wind, Droplet,
   Tv, Bath, CheckCircle, ShieldCheck, Dumbbell, Calendar, Heart, 
   Map, Plane, Stethoscope, Utensils,
-  Clock
+  Clock, Leaf, Sparkles, Mountain, Key, UtensilsCrossed, Flame
 } from "lucide-react";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 40 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
 };
+
+const TILE_ICONS = [Star, Leaf, Droplet, Wind, Sparkles, Mountain, Coffee, Key, UtensilsCrossed, Flame, MapPin, Heart];
+const TILE_ACCENTS = [
+  "rgba(230,172,12,0.5)", "rgba(212,106,126,0.38)", "rgba(100,150,255,0.28)",
+  "rgba(230,172,12,0.22)", "rgba(255,255,255,0.1)", "rgba(255,255,255,0.07)",
+];
+
+function MosaicGrid() {
+  const COLS = 18;
+  const ROWS = 11;
+  const total = COLS * ROWS;
+
+  const goldSet = new Set([4, 12, 21, 30, 38, 47, 56, 63, 71, 80, 89, 97, 106, 115, 123, 132, 141, 150, 158, 167]);
+  const roseSet = new Set([8, 17, 26, 35, 44, 52, 61, 70, 79, 88, 96, 105, 114, 122, 131, 140, 149, 157, 166]);
+  const iconSet = new Set([12, 38, 63, 89, 115, 141, 167]);
+
+  return (
+    <div
+      className="w-full h-full"
+      style={{
+        display: "grid",
+        gridTemplateColumns: `repeat(${COLS}, 1fr)`,
+        gridTemplateRows: `repeat(${ROWS}, 1fr)`,
+        gap: "2px",
+        padding: "2px",
+      }}
+    >
+      {Array.from({ length: total }).map((_, i) => {
+        const isGold = goldSet.has(i);
+        const isRose = roseSet.has(i);
+        const hasIcon = iconSet.has(i);
+        const IconComp = hasIcon ? TILE_ICONS[i % TILE_ICONS.length] : null;
+
+        // Stagger delays across the grid in a wave pattern
+        const col = i % COLS;
+        const row = Math.floor(i / COLS);
+        const delayS = ((col + row) * 0.18) % 4;
+        const durationS = 3.5 + (i % 7) * 0.4;
+
+        let tileClass = "mosaic-tile";
+        let bg = "rgba(255,255,255,0.03)";
+        let border = "1px solid rgba(255,255,255,0.06)";
+        let iconColor = "rgba(255,255,255,0.25)";
+
+        if (isGold) {
+          tileClass = "mosaic-tile-gold";
+          bg = "linear-gradient(135deg, rgba(230,172,12,0.28) 0%, rgba(180,130,8,0.06) 100%)";
+          border = "1px solid rgba(230,172,12,0.22)";
+          iconColor = "rgba(230,172,12,0.85)";
+        } else if (isRose) {
+          tileClass = "mosaic-tile-rose";
+          bg = "linear-gradient(135deg, rgba(212,106,126,0.2) 0%, rgba(180,80,100,0.04) 100%)";
+          border = "1px solid rgba(212,106,126,0.16)";
+        }
+
+        return (
+          <div
+            key={i}
+            className={tileClass}
+            style={{
+              background: bg,
+              border,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              minHeight: 0,
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              ["--td" as any]: `${durationS}s`,
+              ["--dl" as any]: `${delayS}s`,
+            }}
+          >
+            {IconComp && <IconComp size={11} style={{ color: iconColor }} />}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function useCountUp(target: number, duration = 2000, start = false) {
+  const [count, setCount] = useState(0);
+  useEffect(() => {
+    if (!start) return;
+    let startTime: number | null = null;
+    const step = (timestamp: number) => {
+      if (!startTime) startTime = timestamp;
+      const progress = Math.min((timestamp - startTime) / duration, 1);
+      setCount(Math.floor(progress * target));
+      if (progress < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }, [start, target, duration]);
+  return count;
+}
 
 const staggerContainer = {
   hidden: { opacity: 0 },
@@ -29,65 +123,187 @@ export default function Home() {
     <div className="min-h-screen">
       
       {/* SECTION 1: HERO */}
-      <section className="relative h-[100dvh] flex items-center justify-center aurora-bg overflow-hidden pt-20">
-        <div className="absolute inset-0 bg-black/40 z-10"></div>
-        <div className="container relative z-20 mx-auto px-4 text-center">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1, ease: "easeOut" }}
-            className="max-w-4xl mx-auto"
-          >
-            <h2 className="text-primary tracking-[0.3em] text-sm md:text-base uppercase mb-6 font-semibold">
-              Oasis in the Heart of Kathmandu
-            </h2>
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif text-white mb-8 leading-tight">
-              Experience Luxury, <br/>
-              <span className="text-gradient-gold italic">Wellness & Comfort</span>
-            </h1>
-            <p className="text-lg md:text-xl text-gray-300 mb-10 max-w-2xl mx-auto font-light">
-              Discover unparalleled serenity at Hotel Thamel Park Spa. Combining premium hospitality with authentic Korean wellness traditions.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-              <Link href="/contact">
-                <Button className="h-14 px-10 rounded-none bg-primary text-primary-foreground hover:bg-accent hover:text-white transition-all text-sm uppercase tracking-widest font-semibold border border-primary hover:border-accent">
-                  Book Your Stay
-                </Button>
-              </Link>
-              <Link href="/rooms">
-                <Button variant="outline" className="h-14 px-10 rounded-none bg-transparent text-white border-white/30 hover:bg-white/10 hover:border-white transition-all text-sm uppercase tracking-widest">
-                  Explore Rooms
-                </Button>
-              </Link>
-            </div>
-          </motion.div>
+      <section className="relative h-[100dvh] overflow-hidden" style={{ background: "hsl(220,25%,4%)" }}>
+
+        {/* Ambient gradient orbs */}
+        <div className="absolute inset-0 z-0 pointer-events-none">
+          <div className="absolute top-1/4 left-1/3 w-[700px] h-[700px] rounded-full" style={{ background: "radial-gradient(circle, rgba(230,172,12,0.12) 0%, transparent 65%)", filter: "blur(90px)" }} />
+          <div className="absolute bottom-1/3 right-1/4 w-[500px] h-[500px] rounded-full" style={{ background: "radial-gradient(circle, rgba(212,106,126,0.1) 0%, transparent 65%)", filter: "blur(80px)" }} />
+          <div className="absolute top-1/3 right-0 w-[400px] h-[400px] rounded-full" style={{ background: "radial-gradient(circle, rgba(80,120,220,0.08) 0%, transparent 65%)", filter: "blur(70px)" }} />
         </div>
 
-        {/* Floating Stats */}
-        <div className="absolute bottom-0 left-0 right-0 z-20 bg-gradient-to-t from-background to-transparent pb-10 pt-32 hidden md:block">
-          <div className="container mx-auto px-4">
-            <div className="grid grid-cols-4 gap-8">
-              {[
-                { number: "45+", label: "Premium Rooms" },
-                { number: "20+", label: "Spa Services" },
-                { number: "10,000+", label: "Happy Guests" },
-                { number: "15+", label: "Years of Hospitality" }
-              ].map((stat, i) => (
-                <motion.div 
-                  key={i}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.4 + (i * 0.1) }}
-                  className="glass-panel p-6 text-center border-t-primary/30 border-t-2"
-                >
-                  <div className="text-3xl font-serif text-primary mb-1">{stat.number}</div>
-                  <div className="text-xs uppercase tracking-widest text-muted-foreground">{stat.label}</div>
-                </motion.div>
-              ))}
-            </div>
+        {/* Mosaic tile grid — full canvas */}
+        <div className="absolute inset-0 z-[1] pointer-events-none">
+          <MosaicGrid />
+        </div>
+
+        {/* Left-to-right fade mask so content is readable */}
+        <div
+          className="absolute inset-0 z-[2] pointer-events-none"
+          style={{
+            background:
+              "linear-gradient(to right, hsl(220,25%,4%) 0%, hsl(220,25%,4%) 22%, rgba(8,11,20,0.85) 42%, rgba(8,11,20,0.4) 65%, rgba(8,11,20,0.05) 100%)",
+          }}
+        />
+        {/* Bottom fade */}
+        <div
+          className="absolute bottom-0 left-0 right-0 h-56 z-[3] pointer-events-none"
+          style={{ background: "linear-gradient(to top, hsl(220,25%,4%) 0%, transparent 100%)" }}
+        />
+
+        {/* ── MAIN CONTENT — bottom-left ── */}
+        <div className="absolute bottom-24 left-0 right-0 z-[10] px-6 md:px-14 lg:px-20">
+          <div className="max-w-4xl">
+
+            {/* Location breadcrumb */}
+            <motion.div
+              initial={{ opacity: 0, x: -24 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.9, delay: 0.25 }}
+              className="flex items-center gap-4 mb-7"
+            >
+              <div className="w-10 h-px" style={{ background: "hsl(38,92%,58%)" }} />
+              <span className="text-xs tracking-[0.45em] uppercase font-medium" style={{ color: "hsl(38,92%,58%)" }}>
+                Thamel · Kathmandu · Nepal
+              </span>
+            </motion.div>
+
+            {/* Headline */}
+            <motion.h1
+              initial={{ opacity: 0, y: 36 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, delay: 0.45 }}
+              className="font-serif text-white leading-[1.05] mb-8"
+              style={{ fontSize: "clamp(2.8rem, 7vw, 5.5rem)" }}
+            >
+              Experience Luxury,<br />
+              <span className="text-gradient-gold italic">Wellness &amp; Comfort</span><br />
+              <span style={{ color: "rgba(255,255,255,0.75)", fontSize: "0.75em", fontStyle: "italic" }}>at Hotel Thamel Park Spa</span>
+            </motion.h1>
+
+            {/* Subtext + CTAs */}
+            <motion.div
+              initial={{ opacity: 0, y: 22 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.9, delay: 0.3 }}
+              className="flex flex-col md:flex-row md:items-end gap-8 md:gap-14"
+            >
+              <p className="text-gray-400 text-base md:text-lg leading-relaxed max-w-sm font-light">
+                A distinguished boutique hotel in the heart of Thamel — your gateway to Nepal's ancient culture, legendary treks, and sacred landmarks.
+              </p>
+              <div className="flex gap-4 shrink-0">
+                <Link href="/contact">
+                  <Button
+                    data-testid="hero-book-now"
+                    className="h-12 px-8 rounded-none uppercase tracking-widest text-xs font-semibold"
+                    style={{ background: "hsl(38,92%,58%)", color: "hsl(220,25%,4%)" }}
+                  >
+                    Book Now
+                  </Button>
+                </Link>
+                <Link href="/rooms">
+                  <Button
+                    data-testid="hero-explore-rooms"
+                    variant="outline"
+                    className="h-12 px-8 rounded-none uppercase tracking-widest text-xs text-white bg-transparent border-white/25 hover:bg-white/10 hover:border-white/60"
+                  >
+                    Explore Rooms
+                  </Button>
+                </Link>
+              </div>
+            </motion.div>
           </div>
         </div>
+
+        {/* Stats — vertical strip right edge */}
+        <motion.div
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.9, delay: 1.1 }}
+          className="absolute top-1/2 right-6 -translate-y-1/2 z-[10] hidden xl:flex flex-col gap-8"
+        >
+          {[
+            { number: "45+", label: "Rooms" },
+            { number: "20+", label: "Spa Services" },
+            { number: "10K+", label: "Guests" },
+            { number: "15+", label: "Years" },
+          ].map((stat, i) => (
+            <div key={i} className="text-right">
+              <div className="text-2xl font-serif" style={{ color: "hsl(38,92%,58%)" }}>{stat.number}</div>
+              <div className="text-[10px] uppercase tracking-widest mt-0.5" style={{ color: "rgba(255,255,255,0.35)" }}>{stat.label}</div>
+            </div>
+          ))}
+        </motion.div>
+
+        {/* Scroll indicator */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.6 }}
+          className="absolute bottom-28 right-8 z-[10] hidden lg:flex flex-col items-center gap-2"
+        >
+          <div className="w-px h-14 relative overflow-hidden" style={{ background: "rgba(255,255,255,0.12)" }}>
+            <motion.div
+              className="absolute top-0 left-0 right-0"
+              style={{ height: "45%", background: "hsl(38,92%,58%)" }}
+              animate={{ top: ["0%", "110%"] }}
+              transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+            />
+          </div>
+          <span className="text-[9px] uppercase tracking-[0.3em] mt-1" style={{ color: "rgba(255,255,255,0.3)" }}>Scroll</span>
+        </motion.div>
+
+        {/* ── BOOKING BAR — pinned to bottom ── */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, delay: 1.0 }}
+          className="absolute bottom-0 left-0 right-0 z-[20]"
+          style={{
+            background: "rgba(6,9,18,0.88)",
+            backdropFilter: "blur(24px)",
+            WebkitBackdropFilter: "blur(24px)",
+            borderTop: "1px solid rgba(255,255,255,0.08)",
+          }}
+        >
+          <div className="mx-auto px-4 md:px-10">
+            <div className="flex flex-col md:flex-row items-stretch md:items-center md:divide-x divide-white/10">
+              {[
+                { label: "Check In", value: "Select Date", icon: Calendar },
+                { label: "Check Out", value: "Select Date", icon: Calendar },
+                { label: "Room Type", value: "All Rooms", icon: Key },
+                { label: "Guests", value: "2 Adults", icon: Users },
+              ].map((item, i) => (
+                <div
+                  key={i}
+                  data-testid={`booking-${item.label.toLowerCase().replace(" ", "-")}`}
+                  className="flex items-center gap-3 px-5 py-4 flex-1 cursor-pointer group transition-colors hover:bg-white/5"
+                >
+                  <item.icon size={15} style={{ color: "hsl(38,92%,58%)", flexShrink: 0 }} />
+                  <div>
+                    <div className="text-[9px] uppercase tracking-[0.35em] mb-0.5 font-medium" style={{ color: "hsl(38,92%,58%)" }}>
+                      {item.label}
+                    </div>
+                    <div className="text-white text-sm font-medium group-hover:text-white/70 transition-colors">
+                      {item.value}
+                    </div>
+                  </div>
+                </div>
+              ))}
+              <div className="px-5 py-3 shrink-0">
+                <Link href="/contact">
+                  <Button
+                    data-testid="booking-check-availability"
+                    className="h-11 px-8 rounded-none uppercase tracking-widest text-xs font-semibold w-full md:w-auto"
+                    style={{ background: "hsl(38,92%,58%)", color: "hsl(220,25%,4%)" }}
+                  >
+                    Check Availability
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </motion.div>
       </section>
 
       {/* SECTION 2: WELCOME */}
