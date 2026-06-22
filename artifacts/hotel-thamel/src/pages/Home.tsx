@@ -1,114 +1,19 @@
-import React, { useState, useEffect, useRef } from "react";
+import React from "react";
 import { Link } from "wouter";
-import { motion, useInView } from "framer-motion";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { 
-  Star, MapPin, Coffee, Wifi, Car, Users, Briefcase, ChevronRight, Wind, Droplet,
-  Tv, Bath, CheckCircle, ShieldCheck, Dumbbell, Calendar, Heart, 
-  Map, Plane, Stethoscope, Utensils,
-  Clock, Leaf, Sparkles, Mountain, Key, UtensilsCrossed, Flame
+  Star, MapPin, Coffee, Wifi, Users, ChevronRight, Wind, Droplet,
+  Tv, Bath, ShieldCheck, Dumbbell, Calendar, Heart, 
+  Plane, Utensils, Key, UtensilsCrossed, Flame, Sparkles, Leaf
 } from "lucide-react";
 
 const fadeInUp = {
-  hidden: { opacity: 0, y: 40 },
+  hidden: { opacity: 0, y: 30 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
 };
-
-const TILE_ICONS = [Star, Leaf, Droplet, Wind, Sparkles, Mountain, Coffee, Key, UtensilsCrossed, Flame, MapPin, Heart];
-const TILE_ACCENTS = [
-  "rgba(230,172,12,0.5)", "rgba(212,106,126,0.38)", "rgba(100,150,255,0.28)",
-  "rgba(230,172,12,0.22)", "rgba(255,255,255,0.1)", "rgba(255,255,255,0.07)",
-];
-
-function MosaicGrid() {
-  const COLS = 18;
-  const ROWS = 11;
-  const total = COLS * ROWS;
-
-  const goldSet = new Set([4, 12, 21, 30, 38, 47, 56, 63, 71, 80, 89, 97, 106, 115, 123, 132, 141, 150, 158, 167]);
-  const roseSet = new Set([8, 17, 26, 35, 44, 52, 61, 70, 79, 88, 96, 105, 114, 122, 131, 140, 149, 157, 166]);
-  const iconSet = new Set([12, 38, 63, 89, 115, 141, 167]);
-
-  return (
-    <div
-      className="w-full h-full"
-      style={{
-        display: "grid",
-        gridTemplateColumns: `repeat(${COLS}, 1fr)`,
-        gridTemplateRows: `repeat(${ROWS}, 1fr)`,
-        gap: "2px",
-        padding: "2px",
-      }}
-    >
-      {Array.from({ length: total }).map((_, i) => {
-        const isGold = goldSet.has(i);
-        const isRose = roseSet.has(i);
-        const hasIcon = iconSet.has(i);
-        const IconComp = hasIcon ? TILE_ICONS[i % TILE_ICONS.length] : null;
-
-        // Stagger delays across the grid in a wave pattern
-        const col = i % COLS;
-        const row = Math.floor(i / COLS);
-        const delayS = ((col + row) * 0.18) % 4;
-        const durationS = 3.5 + (i % 7) * 0.4;
-
-        let tileClass = "mosaic-tile";
-        let bg = "rgba(255,255,255,0.03)";
-        let border = "1px solid rgba(255,255,255,0.06)";
-        let iconColor = "rgba(255,255,255,0.25)";
-
-        if (isGold) {
-          tileClass = "mosaic-tile-gold";
-          bg = "linear-gradient(135deg, rgba(230,172,12,0.28) 0%, rgba(180,130,8,0.06) 100%)";
-          border = "1px solid rgba(230,172,12,0.22)";
-          iconColor = "rgba(230,172,12,0.85)";
-        } else if (isRose) {
-          tileClass = "mosaic-tile-rose";
-          bg = "linear-gradient(135deg, rgba(212,106,126,0.2) 0%, rgba(180,80,100,0.04) 100%)";
-          border = "1px solid rgba(212,106,126,0.16)";
-        }
-
-        return (
-          <div
-            key={i}
-            className={tileClass}
-            style={{
-              background: bg,
-              border,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              minHeight: 0,
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              ["--td" as any]: `${durationS}s`,
-              ["--dl" as any]: `${delayS}s`,
-            }}
-          >
-            {IconComp && <IconComp size={11} style={{ color: iconColor }} />}
-          </div>
-        );
-      })}
-    </div>
-  );
-}
-
-function useCountUp(target: number, duration = 2000, start = false) {
-  const [count, setCount] = useState(0);
-  useEffect(() => {
-    if (!start) return;
-    let startTime: number | null = null;
-    const step = (timestamp: number) => {
-      if (!startTime) startTime = timestamp;
-      const progress = Math.min((timestamp - startTime) / duration, 1);
-      setCount(Math.floor(progress * target));
-      if (progress < 1) requestAnimationFrame(step);
-    };
-    requestAnimationFrame(step);
-  }, [start, target, duration]);
-  return count;
-}
 
 const staggerContainer = {
   hidden: { opacity: 0 },
@@ -120,323 +25,209 @@ const staggerContainer = {
 
 export default function Home() {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-background">
       
       {/* SECTION 1: HERO */}
-      <section className="relative h-[100dvh] overflow-hidden" style={{ background: "hsl(220,25%,4%)" }}>
+      <section className="relative h-[100dvh] overflow-hidden bg-gradient-to-br from-[#faf8f4] via-[#f7f4ee] to-[#efe9dd]">
+        
+        {/* Subtle dot pattern & Orbs */}
+        <div className="absolute inset-0 z-0 opacity-10 pointer-events-none" 
+             style={{ backgroundImage: 'radial-gradient(hsl(var(--foreground)) 1px, transparent 1px)', backgroundSize: '24px 24px' }}>
+        </div>
+        <div className="absolute top-0 right-1/4 w-[800px] h-[800px] bg-primary/10 rounded-full blur-[120px] pointer-events-none" />
+        <div className="absolute bottom-0 left-1/4 w-[600px] h-[600px] bg-primary/10 rounded-full blur-[100px] pointer-events-none" />
+        <div className="absolute top-1/2 left-1/2 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[100px] pointer-events-none" />
 
-        {/* Ambient gradient orbs */}
-        <div className="absolute inset-0 z-0 pointer-events-none">
-          <div className="absolute top-1/4 left-1/3 w-[700px] h-[700px] rounded-full" style={{ background: "radial-gradient(circle, rgba(230,172,12,0.12) 0%, transparent 65%)", filter: "blur(90px)" }} />
-          <div className="absolute bottom-1/3 right-1/4 w-[500px] h-[500px] rounded-full" style={{ background: "radial-gradient(circle, rgba(212,106,126,0.1) 0%, transparent 65%)", filter: "blur(80px)" }} />
-          <div className="absolute top-1/3 right-0 w-[400px] h-[400px] rounded-full" style={{ background: "radial-gradient(circle, rgba(80,120,220,0.08) 0%, transparent 65%)", filter: "blur(70px)" }} />
+        {/* Abstract Art Element */}
+        <div className="absolute top-1/2 right-0 -translate-y-1/2 translate-x-1/4 pointer-events-none select-none z-0">
+          <div className="font-serif text-primary/10" style={{ fontSize: '40vw', lineHeight: 1 }}>H</div>
+          <div className="absolute inset-0 flex items-center justify-center">
+             <div className="w-[60%] h-[60%] border border-primary/20 rounded-full absolute" />
+             <div className="w-[80%] h-[80%] border border-primary/10 rounded-full absolute" />
+             <Star className="absolute top-[20%] left-[30%] text-primary/30 w-8 h-8" />
+             <Leaf className="absolute bottom-[30%] right-[20%] text-primary/30 w-10 h-10" />
+             <Wind className="absolute top-[50%] right-[10%] text-primary/30 w-6 h-6" />
+          </div>
         </div>
 
-        {/* Mosaic tile grid — full canvas */}
-        <div className="absolute inset-0 z-[1] pointer-events-none">
-          <MosaicGrid />
-        </div>
-
-        {/* Left-to-right fade mask so content is readable */}
-        <div
-          className="absolute inset-0 z-[2] pointer-events-none"
-          style={{
-            background:
-              "linear-gradient(to right, hsl(220,25%,4%) 0%, hsl(220,25%,4%) 22%, rgba(8,11,20,0.85) 42%, rgba(8,11,20,0.4) 65%, rgba(8,11,20,0.05) 100%)",
-          }}
-        />
-        {/* Bottom fade */}
-        <div
-          className="absolute bottom-0 left-0 right-0 h-56 z-[3] pointer-events-none"
-          style={{ background: "linear-gradient(to top, hsl(220,25%,4%) 0%, transparent 100%)" }}
-        />
-
-        {/* ── MAIN CONTENT — bottom-left ── */}
-        <div className="absolute bottom-24 left-0 right-0 z-[10] px-6 md:px-14 lg:px-20">
+        {/* Hero Content */}
+        <div className="absolute bottom-32 left-0 right-0 z-10 px-6 md:px-14 lg:px-20">
           <div className="max-w-4xl">
-
-            {/* Location breadcrumb */}
-            <motion.div
-              initial={{ opacity: 0, x: -24 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.9, delay: 0.25 }}
-              className="flex items-center gap-4 mb-7"
-            >
-              <div className="w-10 h-px" style={{ background: "hsl(38,92%,58%)" }} />
-              <span className="text-xs tracking-[0.45em] uppercase font-medium" style={{ color: "hsl(38,92%,58%)" }}>
-                Thamel · Kathmandu · Nepal
-              </span>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8 }} className="flex items-center gap-4 mb-6">
+              <div className="w-12 h-px bg-primary" />
+              <span className="text-primary text-xs tracking-[0.4em] uppercase font-medium">THAMEL · KATHMANDU · NEPAL</span>
             </motion.div>
 
-            {/* Headline */}
-            <motion.h1
-              initial={{ opacity: 0, y: 36 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, delay: 0.45 }}
-              className="font-serif text-white leading-[1.05] mb-8"
-              style={{ fontSize: "clamp(2.8rem, 7vw, 5.5rem)" }}
+            <motion.h1 
+              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.1 }}
+              className="font-serif text-foreground leading-[1.1] mb-6"
+              style={{ fontSize: "clamp(3rem, 7vw, 6rem)" }}
             >
               Experience Luxury,<br />
-              <span className="text-gradient-gold italic">Wellness &amp; Comfort</span><br />
-              <span style={{ color: "rgba(255,255,255,0.75)", fontSize: "0.75em", fontStyle: "italic" }}>at Hotel Thamel Park Spa</span>
+              <span className="italic text-transparent bg-clip-text bg-gradient-to-r from-primary to-[#B8860B]">Wellness & Comfort</span>
             </motion.h1>
 
-            {/* Subtext + CTAs */}
-            <motion.div
-              initial={{ opacity: 0, y: 22 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.9, delay: 0.3 }}
-              className="flex flex-col md:flex-row md:items-end gap-8 md:gap-14"
-            >
-              <p className="text-gray-400 text-base md:text-lg leading-relaxed max-w-sm font-light">
-                A distinguished boutique hotel in the heart of Thamel — your gateway to Nepal's ancient culture, legendary treks, and sacred landmarks.
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2 }} className="mb-8">
+               <p className="font-serif text-xl md:text-2xl text-foreground/70 italic">at Hotel Thamel Park Spa</p>
+            </motion.div>
+
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.3 }} className="flex flex-col md:flex-row md:items-center gap-8 mb-4">
+              <p className="text-foreground/80 max-w-md text-lg font-light leading-relaxed">
+                A sanctuary of luxury, wellness and culture in Kathmandu's heart.
               </p>
-              <div className="flex gap-4 shrink-0">
-                <Link href="/contact">
-                  <Button
-                    data-testid="hero-book-now"
-                    className="h-12 px-8 rounded-none uppercase tracking-widest text-xs font-semibold"
-                    style={{ background: "hsl(38,92%,58%)", color: "hsl(220,25%,4%)" }}
-                  >
-                    Book Now
-                  </Button>
-                </Link>
-                <Link href="/rooms">
-                  <Button
-                    data-testid="hero-explore-rooms"
-                    variant="outline"
-                    className="h-12 px-8 rounded-none uppercase tracking-widest text-xs text-white bg-transparent border-white/25 hover:bg-white/10 hover:border-white/60"
-                  >
-                    Explore Rooms
-                  </Button>
-                </Link>
+              <div className="flex gap-4">
+                <Button asChild data-testid="hero-btn-book" className="rounded-none bg-primary text-white hover:bg-primary/90 px-8 py-6 h-auto tracking-widest uppercase text-xs">
+                  <Link href="/contact">Book Now</Link>
+                </Button>
+                <Button asChild data-testid="hero-btn-explore" variant="outline" className="rounded-none border-foreground text-foreground hover:bg-foreground hover:text-white px-8 py-6 h-auto tracking-widest uppercase text-xs bg-transparent">
+                  <Link href="/rooms">Explore Rooms</Link>
+                </Button>
               </div>
             </motion.div>
           </div>
         </div>
 
-        {/* Stats — vertical strip right edge */}
-        <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.9, delay: 1.1 }}
-          className="absolute top-1/2 right-6 -translate-y-1/2 z-[10] hidden xl:flex flex-col gap-8"
+        {/* Stats Row */}
+        <motion.div 
+          initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}
+          className="absolute bottom-20 left-0 right-0 z-20 px-6 md:px-14 lg:px-20 hidden md:flex items-center gap-12"
         >
           {[
-            { number: "45+", label: "Rooms" },
-            { number: "20+", label: "Spa Services" },
-            { number: "10K+", label: "Guests" },
-            { number: "15+", label: "Years" },
-          ].map((stat, i) => (
-            <div key={i} className="text-right">
-              <div className="text-2xl font-serif" style={{ color: "hsl(38,92%,58%)" }}>{stat.number}</div>
-              <div className="text-[10px] uppercase tracking-widest mt-0.5" style={{ color: "rgba(255,255,255,0.35)" }}>{stat.label}</div>
-            </div>
+            { label: "Rooms", val: "45+" },
+            { label: "Spa Services", val: "20+" },
+            { label: "Guests", val: "10,000+" },
+            { label: "Years", val: "15+" }
+          ].map((s, i) => (
+             <div key={i} className="flex items-center gap-6">
+                <div>
+                   <div className="font-serif text-2xl text-primary">{s.val}</div>
+                   <div className="text-[10px] uppercase tracking-widest text-foreground/50">{s.label}</div>
+                </div>
+                {i < 3 && <div className="w-px h-8 bg-foreground/10" />}
+             </div>
           ))}
         </motion.div>
 
-        {/* Scroll indicator */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.6 }}
-          className="absolute bottom-28 right-8 z-[10] hidden lg:flex flex-col items-center gap-2"
+        {/* Booking Bar */}
+        <motion.div 
+          initial={{ opacity: 0, y: "100%" }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
+          className="absolute bottom-0 left-0 right-0 z-30 bg-white border-t border-border flex flex-col md:flex-row"
         >
-          <div className="w-px h-14 relative overflow-hidden" style={{ background: "rgba(255,255,255,0.12)" }}>
-            <motion.div
-              className="absolute top-0 left-0 right-0"
-              style={{ height: "45%", background: "hsl(38,92%,58%)" }}
-              animate={{ top: ["0%", "110%"] }}
-              transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-            />
-          </div>
-          <span className="text-[9px] uppercase tracking-[0.3em] mt-1" style={{ color: "rgba(255,255,255,0.3)" }}>Scroll</span>
-        </motion.div>
-
-        {/* ── BOOKING BAR — pinned to bottom ── */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 1.0 }}
-          className="absolute bottom-0 left-0 right-0 z-[20]"
-          style={{
-            background: "rgba(6,9,18,0.88)",
-            backdropFilter: "blur(24px)",
-            WebkitBackdropFilter: "blur(24px)",
-            borderTop: "1px solid rgba(255,255,255,0.08)",
-          }}
-        >
-          <div className="mx-auto px-4 md:px-10">
-            <div className="flex flex-col md:flex-row items-stretch md:items-center md:divide-x divide-white/10">
-              {[
-                { label: "Check In", value: "Select Date", icon: Calendar },
-                { label: "Check Out", value: "Select Date", icon: Calendar },
-                { label: "Room Type", value: "All Rooms", icon: Key },
-                { label: "Guests", value: "2 Adults", icon: Users },
-              ].map((item, i) => (
-                <div
-                  key={i}
-                  data-testid={`booking-${item.label.toLowerCase().replace(" ", "-")}`}
-                  className="flex items-center gap-3 px-5 py-4 flex-1 cursor-pointer group transition-colors hover:bg-white/5"
-                >
-                  <item.icon size={15} style={{ color: "hsl(38,92%,58%)", flexShrink: 0 }} />
-                  <div>
-                    <div className="text-[9px] uppercase tracking-[0.35em] mb-0.5 font-medium" style={{ color: "hsl(38,92%,58%)" }}>
-                      {item.label}
-                    </div>
-                    <div className="text-white text-sm font-medium group-hover:text-white/70 transition-colors">
-                      {item.value}
-                    </div>
-                  </div>
-                </div>
-              ))}
-              <div className="px-5 py-3 shrink-0">
-                <Link href="/contact">
-                  <Button
-                    data-testid="booking-check-availability"
-                    className="h-11 px-8 rounded-none uppercase tracking-widest text-xs font-semibold w-full md:w-auto"
-                    style={{ background: "hsl(38,92%,58%)", color: "hsl(220,25%,4%)" }}
-                  >
-                    Check Availability
-                  </Button>
-                </Link>
+           {[
+             { label: "Check In", icon: Calendar },
+             { label: "Check Out", icon: Calendar },
+             { label: "Room Type", icon: Key },
+             { label: "Guests", icon: Users }
+           ].map((item, i) => (
+              <div key={i} className="flex-1 flex items-center gap-4 px-6 py-4 border-b md:border-b-0 md:border-r border-border hover:bg-secondary/50 cursor-pointer transition-colors" data-testid={`booking-bar-${i}`}>
+                 <item.icon className="text-primary w-5 h-5" />
+                 <div>
+                    <div className="text-[10px] uppercase tracking-widest text-primary font-medium">{item.label}</div>
+                    <div className="text-sm font-medium text-foreground">Select</div>
+                 </div>
               </div>
-            </div>
-          </div>
+           ))}
+           <div className="p-4 flex items-center justify-center shrink-0">
+             <Button asChild data-testid="booking-bar-btn" className="w-full md:w-auto rounded-none bg-primary text-white hover:bg-primary/90 uppercase tracking-widest text-xs px-8 py-4 h-auto">
+               <Link href="/contact">Check Availability</Link>
+             </Button>
+           </div>
         </motion.div>
       </section>
 
-      {/* SECTION 2: WELCOME */}
-      <section className="py-24 md:py-32 bg-background relative">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-            <motion.div 
-              initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp}
-              className="relative"
-            >
-              <div className="w-full aspect-square md:aspect-[4/5] bg-card border border-border/50 relative overflow-hidden flex items-center justify-center group">
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent"></div>
-                <div className="w-3/4 h-3/4 border border-primary/20 rounded-full flex items-center justify-center p-8">
-                  <div className="w-full h-full border border-primary/40 rounded-full flex items-center justify-center">
-                     <span className="font-serif text-6xl text-primary/20">HTPS</span>
-                  </div>
-                </div>
-              </div>
-              <div className="absolute -bottom-8 -right-8 w-48 h-48 bg-card border border-border/50 glass-panel flex items-center justify-center p-6 hidden md:flex flex-col text-center z-10">
-                <Star className="text-primary mb-2" size={24} />
-                <span className="font-serif text-xl">5-Star</span>
-                <span className="text-xs uppercase tracking-widest text-muted-foreground">Experience</span>
-              </div>
-            </motion.div>
-            
-            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp}>
-              <h3 className="text-primary tracking-[0.2em] text-sm uppercase mb-4">Our Philosophy</h3>
-              <h2 className="text-4xl md:text-5xl font-serif mb-8 leading-tight">A Sanctuary of <span className="italic text-muted-foreground">Elegance</span> in Kathmandu</h2>
-              <p className="text-muted-foreground text-lg mb-6 leading-relaxed font-light">
-                Nestled in the vibrant heart of Thamel, Hotel Thamel Park Spa offers a rare combination of bustling city access and tranquil retreat. Since our inception, we have been dedicated to redefining luxury hospitality in Nepal.
-              </p>
-              <p className="text-muted-foreground text-lg mb-10 leading-relaxed font-light">
-                Our unique incorporation of traditional Korean wellness culture into our spa services provides an unparalleled relaxation experience, while our Garden Restaurant serves culinary masterpieces in a serene outdoor setting.
-              </p>
-              <Link href="/about">
-                <Button variant="link" className="text-primary hover:text-white p-0 text-lg group h-auto">
-                  Discover Our Story <ChevronRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </Button>
-              </Link>
-            </motion.div>
+      {/* SECTION 2: ABOUT / PHILOSOPHY */}
+      <section className="py-32 bg-white">
+        <div className="container mx-auto px-4 md:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp}>
+               <h3 className="text-primary tracking-[0.2em] text-sm uppercase mb-6 font-medium">Our Philosophy</h3>
+               <h2 className="text-4xl md:text-5xl font-serif text-foreground mb-8 leading-tight">
+                 A Sanctuary of Elegance in the Heart of Kathmandu
+               </h2>
+               <p className="text-muted-foreground text-lg mb-6 leading-relaxed font-light">
+                 Nestled in the vibrant heart of Thamel, Hotel Thamel Park Spa offers a rare combination of bustling city access and tranquil retreat. We redefine luxury hospitality by seamlessly blending modern comforts with authentic Nepalese warmth.
+               </p>
+               <p className="text-muted-foreground text-lg mb-10 leading-relaxed font-light">
+                 From our premium accommodations to our dedicated wellness spa, every detail is crafted to provide an unparalleled experience for the discerning traveler.
+               </p>
+               <Button asChild data-testid="about-link" variant="link" className="text-primary hover:text-primary/80 p-0 text-lg group h-auto">
+                 <Link href="/about">
+                   Discover Our Story <ChevronRight className="ml-2 w-5 h-5 group-hover:translate-x-2 transition-transform" />
+                 </Link>
+               </Button>
+             </motion.div>
+
+             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp} className="relative aspect-square flex items-center justify-center">
+               <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden">
+                 <span className="font-serif text-secondary/40" style={{ fontSize: '20rem', lineHeight: 0.8 }}>HTPS</span>
+               </div>
+               
+               <div className="relative z-10 w-full max-w-md bg-secondary/80 backdrop-blur-sm p-10 border-l-4 border-primary shadow-xl">
+                 <QuoteIcon className="text-primary/40 w-12 h-12 mb-6" />
+                 <p className="font-serif text-xl text-foreground italic mb-6 leading-relaxed">
+                   "Our vision was to create a space where the chaos of the city fades away, leaving only peace, comfort, and extraordinary service."
+                 </p>
+                 <div className="text-sm tracking-widest uppercase text-primary font-medium">— Management</div>
+               </div>
+
+               <div className="absolute bottom-0 left-0 right-0 grid grid-cols-2 gap-6 pt-12">
+                  {[
+                    { title: "Luxury", icon: Star },
+                    { title: "Wellness", icon: Heart },
+                    { title: "Authenticity", icon: MapPin },
+                    { title: "Hospitality", icon: Users }
+                  ].map((item, i) => (
+                    <div key={i} className="flex items-center gap-3">
+                       <item.icon className="text-primary w-5 h-5" />
+                       <span className="text-sm font-medium tracking-wider uppercase text-foreground">{item.title}</span>
+                    </div>
+                  ))}
+               </div>
+             </motion.div>
           </div>
         </div>
       </section>
 
-      {/* SECTION 3: WHY CHOOSE US */}
-      <section className="py-24 bg-card border-y border-border/50">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h3 className="text-primary tracking-[0.2em] text-sm uppercase mb-4">Why Stay With Us</h3>
-            <h2 className="text-4xl font-serif">Unmatched Amenities</h2>
-          </div>
-          
-          <motion.div 
-            variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
-          >
-            {[
-              { icon: MapPin, title: "Prime Location", desc: "Heart of Thamel, walking distance to heritage sites" },
-              { icon: Wind, title: "Korean Spa", desc: "Authentic steam, sauna, and wellness therapies" },
-              { icon: Coffee, title: "Garden Restaurant", desc: "Serene dining with international & local cuisine" },
-              { icon: Star, title: "Modern Rooms", desc: "Premium comforts with Himalayan-inspired decor" },
-              { icon: Wifi, title: "Free WiFi", desc: "Complimentary reliable connectivity throughout" },
-              { icon: Plane, title: "Airport Assistance", desc: "Seamless transfers and travel concierge" },
-              { icon: Users, title: "Family Friendly", desc: "Spacious suites and dedicated kids services" },
-              { icon: Briefcase, title: "Business Friendly", desc: "Meeting rooms and executive amenities" }
-            ].map((feature, i) => (
-              <motion.div key={i} variants={fadeInUp}>
-                <Card className="bg-background/50 border-border/50 hover:border-primary/50 transition-colors group h-full">
-                  <CardContent className="p-8">
-                    <feature.icon className="w-10 h-10 text-primary mb-6 group-hover:scale-110 transition-transform" strokeWidth={1.5} />
-                    <h4 className="text-xl font-serif mb-3">{feature.title}</h4>
-                    <p className="text-sm text-muted-foreground leading-relaxed">{feature.desc}</p>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-      
-      {/* SECTION 4: ROOM CATEGORIES */}
-      <section className="py-24 bg-background">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
-            <div>
-              <h3 className="text-primary tracking-[0.2em] text-sm uppercase mb-4">Accommodation</h3>
-              <h2 className="text-4xl font-serif">Luxurious Rooms & Suites</h2>
-            </div>
-            <Link href="/rooms">
-              <Button variant="outline" className="border-border hover:bg-card uppercase tracking-widest text-xs h-12 px-6">
-                View All Rooms
-              </Button>
-            </Link>
+      {/* SECTION 3: ROOM CATEGORIES */}
+      <section className="py-32 bg-secondary">
+        <div className="container mx-auto px-4 md:px-8">
+          <div className="text-center mb-20">
+            <h3 className="text-primary tracking-[0.2em] text-sm uppercase mb-4 font-medium">Accommodation</h3>
+            <h2 className="text-4xl md:text-5xl font-serif text-foreground">Luxurious Rooms & Suites</h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
             {[
-              { name: "Deluxe Room", price: "$120", desc: "Elegant retreat with modern amenities.", amenities: [Wifi, Tv, Wind, Bath] },
-              { name: "Premium Deluxe Room", price: "$160", desc: "Spacious comfort with enhanced city views.", amenities: [Wifi, Coffee, ShieldCheck, Bath] },
-              { name: "Family Room", price: "$220", desc: "Perfect for families, featuring interconnected spaces.", amenities: [Wifi, Tv, Coffee, Users] },
-              { name: "Executive Room", price: "$280", desc: "The pinnacle of luxury with separate living areas.", amenities: [Wifi, Coffee, Wind, Star] }
+              { name: "Deluxe Room", price: "120", desc: "Elegant retreat with modern amenities and comfort.", amenities: [Wifi, Tv, Wind, Bath] },
+              { name: "Premium Deluxe", price: "160", desc: "Spacious comfort with enhanced city views.", amenities: [Wifi, Coffee, ShieldCheck, Bath] },
+              { name: "Family Room", price: "220", desc: "Perfect for families, featuring interconnected spaces.", amenities: [Wifi, Tv, Coffee, Users] },
+              { name: "Executive Room", price: "280", desc: "The pinnacle of luxury with separate living areas.", amenities: [Wifi, Coffee, Wind, Star] }
             ].map((room, i) => (
               <motion.div 
-                key={i} 
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1, duration: 0.6 }}
+                key={i} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp} transition={{ delay: i * 0.1 }}
               >
-                <Card className="bg-card border-border/50 hover:border-primary/50 transition-all overflow-hidden group">
-                  <div className="h-48 bg-gradient-to-br from-background to-primary/5 flex items-center justify-center border-b border-border/50 relative">
-                    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                    <span className="font-serif text-2xl text-white/30 tracking-wider uppercase">{room.name}</span>
-                  </div>
-                  <CardContent className="p-8">
-                    <div className="flex justify-between items-start mb-4">
-                      <h3 className="text-2xl font-serif text-white">{room.name}</h3>
-                      <div className="text-right">
-                        <div className="text-xs text-muted-foreground uppercase tracking-widest mb-1">From</div>
-                        <div className="text-primary font-serif text-xl">{room.price} <span className="text-xs text-muted-foreground font-sans">/night</span></div>
-                      </div>
-                    </div>
-                    <p className="text-muted-foreground font-light mb-6 text-sm">{room.desc}</p>
-                    <div className="flex items-center gap-4 mb-8">
+                <Card className="bg-white border-t-4 border-t-primary border-x-0 border-b-0 shadow-sm hover:shadow-xl transition-all duration-300 group h-full rounded-none">
+                  <CardContent className="p-8 flex flex-col h-full">
+                    <h3 className="text-2xl font-serif text-foreground mb-4">{room.name}</h3>
+                    <p className="text-muted-foreground text-sm font-light mb-6 flex-grow">{room.desc}</p>
+                    
+                    <div className="flex gap-4 mb-8">
                       {room.amenities.map((Icon, idx) => (
-                        <Icon key={idx} className="w-5 h-5 text-muted-foreground" strokeWidth={1.5} />
+                        <div key={idx} className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-primary">
+                          <Icon className="w-4 h-4" />
+                        </div>
                       ))}
                     </div>
-                    <Link href="/contact">
-                      <Button className="w-full bg-primary text-primary-foreground hover:bg-accent rounded-none uppercase tracking-widest text-xs h-12">
-                        Book Now
+
+                    <div className="flex items-end justify-between mt-auto">
+                      <div>
+                        <div className="text-[10px] uppercase tracking-widest text-muted-foreground mb-1">From</div>
+                        <div className="font-serif text-2xl text-primary">${room.price}<span className="text-sm font-sans text-muted-foreground">/night</span></div>
+                      </div>
+                      <Button asChild data-testid={`room-btn-${i}`} variant="ghost" className="text-foreground hover:text-primary hover:bg-transparent p-0 uppercase tracking-widest text-xs font-medium">
+                        <Link href="/contact">Book Now</Link>
                       </Button>
-                    </Link>
+                    </div>
                   </CardContent>
                 </Card>
               </motion.div>
@@ -445,320 +236,362 @@ export default function Home() {
         </div>
       </section>
 
-      {/* SECTION 5: KOREAN SPA EXPERIENCE */}
-      <section className="py-24 bg-card relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-primary/5 to-transparent pointer-events-none"></div>
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp}>
-              <h3 className="text-primary tracking-[0.2em] text-sm uppercase mb-4">Wellness Sanctuary</h3>
-              <h2 className="text-4xl md:text-5xl font-serif mb-8 leading-tight">Authentic Korean <br/>Spa Experience</h2>
-              <p className="text-muted-foreground text-lg mb-8 font-light leading-relaxed">
-                Rejuvenate your body and soul in our dedicated Korean Spa. The first of its kind in Kathmandu, offering centuries-old wellness traditions blended with modern luxury therapies.
+      {/* SECTION 4: SPA & WELLNESS */}
+      <section className="py-32 bg-white">
+        <div className="container mx-auto px-4 md:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+            
+            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp} className="lg:col-span-5">
+              <h3 className="text-primary tracking-[0.2em] text-sm uppercase mb-6 font-medium">Spa & Wellness</h3>
+              <h2 className="text-4xl md:text-5xl font-serif text-foreground mb-8 leading-tight">
+                Restore. Renew. Revive.
+              </h2>
+              <p className="text-muted-foreground text-lg mb-6 leading-relaxed font-light">
+                Discover an oasis of tranquility within the city. Our premium Spa offers a holistic approach to wellness, combining ancient therapeutic traditions with modern luxury treatments.
               </p>
-              
-              <div className="grid grid-cols-2 gap-x-4 gap-y-6 mb-10">
-                {[
-                  "Traditional Korean Wellness", "Sauna & Heat Therapy", 
-                  "Steam Therapy", "Relaxation Area", 
-                  "Massage Therapies", "Wellness Packages"
-                ].map((service, i) => (
-                  <div key={i} className="flex items-center gap-3">
-                    <CheckCircle className="text-primary w-5 h-5 shrink-0" strokeWidth={1.5} />
-                    <span className="text-sm text-gray-300">{service}</span>
+              <p className="text-muted-foreground text-lg mb-10 leading-relaxed font-light">
+                Let our expert therapists guide you on a journey of complete relaxation, restoring balance to your mind, body, and spirit in our state-of-the-art facilities.
+              </p>
+
+              <div className="space-y-4 mb-10">
+                {["Sauna & Steam Therapy", "Relaxation Area", "Massage Therapy", "Wellness Packages", "Couples Experience"].map((service, i) => (
+                  <div key={i} className="flex items-center gap-4">
+                    <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                      <div className="w-2 h-2 rounded-full bg-primary" />
+                    </div>
+                    <span className="text-foreground font-medium">{service}</span>
                   </div>
                 ))}
               </div>
-              
-              <Link href="/spa">
-                <Button className="rounded-none bg-transparent border border-primary text-primary hover:bg-primary hover:text-primary-foreground uppercase tracking-widest text-xs h-12 px-8">
-                  Explore Spa Menu
-                </Button>
-              </Link>
-            </motion.div>
 
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              className="grid grid-cols-2 gap-4"
-            >
-              <div className="bg-background border border-border/50 aspect-square p-6 flex flex-col items-center justify-center text-center">
-                <Wind className="w-10 h-10 text-primary mb-4" strokeWidth={1} />
-                <h4 className="font-serif text-lg mb-2">Heat Therapy</h4>
-                <p className="text-xs text-muted-foreground font-light">Purify and detoxify</p>
-              </div>
-              <div className="bg-background border border-border/50 aspect-square p-6 flex flex-col items-center justify-center text-center mt-8">
-                <Droplet className="w-10 h-10 text-primary mb-4" strokeWidth={1} />
-                <h4 className="font-serif text-lg mb-2">Steam Room</h4>
-                <p className="text-xs text-muted-foreground font-light">Clear respiratory passages</p>
-              </div>
-              <div className="bg-background border border-border/50 aspect-square p-6 flex flex-col items-center justify-center text-center">
-                <Heart className="w-10 h-10 text-primary mb-4" strokeWidth={1} />
-                <h4 className="font-serif text-lg mb-2">Massage</h4>
-                <p className="text-xs text-muted-foreground font-light">Deep tissue relaxation</p>
-              </div>
-              <div className="bg-background border border-border/50 aspect-square p-6 flex flex-col items-center justify-center text-center mt-8">
-                <Star className="w-10 h-10 text-primary mb-4" strokeWidth={1} />
-                <h4 className="font-serif text-lg mb-2">Relaxation</h4>
-                <p className="text-xs text-muted-foreground font-light">Unwind in tranquility</p>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* SECTION 6: GARDEN RESTAURANT */}
-      <section className="py-24 bg-background">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16 max-w-3xl mx-auto">
-            <h3 className="text-primary tracking-[0.2em] text-sm uppercase mb-4">Culinary Excellence</h3>
-            <h2 className="text-4xl md:text-5xl font-serif mb-6">The Garden Restaurant</h2>
-            <p className="text-muted-foreground font-light text-lg">
-              Experience dining in an urban oasis. Our master chefs prepare exquisite dishes that blend local Nepalese flavors, authentic Korean cuisine, and international favorites.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              { title: "Indoor Dining", desc: "Elegant ambient setting", icon: Utensils },
-              { title: "Garden Seating", desc: "Al fresco under the stars", icon: Wind },
-              { title: "Korean Cuisine", desc: "Authentic imported flavors", icon: Coffee },
-              { title: "Nepali & Global", desc: "Diverse culinary options", icon: Star }
-            ].map((item, i) => (
-              <motion.div 
-                key={i}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="group cursor-pointer"
-              >
-                <div className="h-64 border border-border/50 bg-card p-8 flex flex-col items-center justify-center text-center hover:bg-card/80 hover:border-primary/50 transition-all relative overflow-hidden">
-                  <item.icon className="w-8 h-8 text-primary mb-6 group-hover:scale-110 transition-transform" strokeWidth={1} />
-                  <h4 className="text-xl font-serif text-white mb-2">{item.title}</h4>
-                  <p className="text-sm text-muted-foreground font-light">{item.desc}</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-
-          <div className="text-center mt-12">
-            <Link href="/restaurant">
-              <Button className="rounded-none bg-primary text-primary-foreground hover:bg-accent uppercase tracking-widest text-xs h-12 px-8">
-                View Menus
+              <Button asChild data-testid="spa-btn" className="rounded-none bg-primary text-white hover:bg-primary/90 px-8 py-6 h-auto tracking-widest uppercase text-xs">
+                <Link href="/spa">Discover Treatments</Link>
               </Button>
-            </Link>
+            </motion.div>
+
+            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp} className="lg:col-span-7 relative h-[600px] w-full bg-gradient-to-br from-secondary to-[#fcfaf5] rounded-3xl overflow-hidden flex items-center justify-center shadow-lg border border-border/50">
+               {/* Abstract Spa Art */}
+               <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="w-[80%] h-[80%] border-[0.5px] border-primary/20 rounded-full animate-[spin_60s_linear_infinite]" />
+                  <div className="w-[60%] h-[60%] border-[0.5px] border-primary/30 rounded-full animate-[spin_40s_linear_infinite_reverse]" />
+                  <div className="w-[40%] h-[40%] bg-primary/5 rounded-full" />
+               </div>
+               
+               <Droplet className="absolute top-[30%] left-[20%] w-16 h-16 text-primary/40 animate-pulse" />
+               <Wind className="absolute bottom-[20%] right-[30%] w-20 h-20 text-primary/30" />
+               <Leaf className="absolute top-[40%] right-[20%] w-12 h-12 text-primary/50" />
+               <Sparkles className="absolute bottom-[40%] left-[30%] w-10 h-10 text-primary/40" />
+               
+               <div className="relative z-10 w-32 h-32 bg-white rounded-full flex items-center justify-center shadow-xl">
+                 <span className="font-serif text-primary text-2xl">SPA</span>
+               </div>
+            </motion.div>
+
           </div>
         </div>
       </section>
 
-      {/* SECTION 7: HOTEL FACILITIES */}
-      <section className="py-24 bg-card border-y border-border/50">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h3 className="text-primary tracking-[0.2em] text-sm uppercase mb-4">Complete Experience</h3>
-            <h2 className="text-4xl font-serif">Comprehensive Facilities</h2>
-          </div>
+      {/* SECTION 5: GARDEN RESTAURANT */}
+      <section className="py-32 bg-secondary">
+        <div className="container mx-auto px-4 md:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+            
+            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp} className="order-2 lg:order-1 relative aspect-square bg-white rounded-t-full flex items-center justify-center border border-border/50 shadow-sm">
+               {/* Abstract Restaurant Art */}
+               <div className="absolute inset-0 flex items-center justify-center flex-col gap-8">
+                  <div className="w-[70%] h-[70%] border border-primary/20 rounded-t-full absolute top-0" />
+                  <UtensilsCrossed className="w-24 h-24 text-primary/30" strokeWidth={1} />
+                  <div className="flex gap-4">
+                     <Coffee className="w-8 h-8 text-primary/40" />
+                     <Flame className="w-8 h-8 text-primary/40" />
+                  </div>
+               </div>
+            </motion.div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
-            {[
-              { icon: Droplet, label: "Pool" },
-              { icon: Dumbbell, label: "Gym" },
-              { icon: Users, label: "Conference Room" },
-              { icon: Clock, label: "24hr Reception" },
-              { icon: Wind, label: "Laundry" },
-              { icon: Coffee, label: "Room Service" },
-              { icon: Star, label: "Bar" },
-              { icon: Briefcase, label: "Business Center" },
-              { icon: Map, label: "Garden" },
-              { icon: Car, label: "Parking" },
-              { icon: Plane, label: "Airport Transfer" },
-              { icon: Stethoscope, label: "Doctor on Call" }
-            ].map((facility, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.05 }}
-                className="bg-background/50 border border-border/50 p-6 flex flex-col items-center justify-center text-center hover:border-primary/30 transition-colors"
-              >
-                <facility.icon className="w-6 h-6 text-primary mb-3" strokeWidth={1.5} />
-                <span className="text-xs uppercase tracking-widest text-gray-400">{facility.label}</span>
-              </motion.div>
-            ))}
+            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp} className="order-1 lg:order-2">
+              <h3 className="text-primary tracking-[0.2em] text-sm uppercase mb-6 font-medium">Garden Restaurant</h3>
+              <h2 className="text-4xl md:text-5xl font-serif text-foreground mb-8 leading-tight">
+                Flavors of the World, Soul of Nepal
+              </h2>
+              <p className="text-muted-foreground text-lg mb-10 leading-relaxed font-light">
+                Dine in our lush garden setting where culinary excellence meets serene ambiance. Our masterful chefs create extraordinary dishes using the finest local ingredients and international techniques.
+              </p>
+
+              <div className="flex flex-wrap gap-3 mb-10">
+                {["Nepali Cuisine", "International", "Breakfast", "Garden Dining"].map((tag, i) => (
+                   <span key={i} className="px-6 py-2 border border-primary/20 text-primary text-sm tracking-widest uppercase bg-white rounded-full">
+                     {tag}
+                   </span>
+                ))}
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-10">
+                 {[
+                   { title: "Fine Dining", desc: "Exquisite multi-course meals", icon: Utensils },
+                   { title: "Cafe & Lounge", desc: "Artisan coffee and pastries", icon: Coffee }
+                 ].map((item, i) => (
+                   <div key={i} className="bg-white p-6 border border-border hover:border-primary transition-colors">
+                      <item.icon className="w-8 h-8 text-primary mb-4" />
+                      <h4 className="font-serif text-xl text-foreground mb-2">{item.title}</h4>
+                      <p className="text-sm text-muted-foreground font-light">{item.desc}</p>
+                   </div>
+                 ))}
+              </div>
+
+              <Button asChild data-testid="restaurant-btn" variant="outline" className="rounded-none border-primary text-primary hover:bg-primary hover:text-white px-8 py-6 h-auto tracking-widest uppercase text-xs">
+                <Link href="/restaurant">View Menu</Link>
+              </Button>
+            </motion.div>
+
           </div>
         </div>
       </section>
 
-      {/* SECTION 8: GUEST TESTIMONIALS */}
-      <section className="py-24 bg-background">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h3 className="text-primary tracking-[0.2em] text-sm uppercase mb-4">Guest Voices</h3>
-            <h2 className="text-4xl font-serif">What Our Guests Say</h2>
+      {/* SECTION 6: HOTEL FACILITIES */}
+      <section className="py-32 bg-white">
+        <div className="container mx-auto px-4 md:px-8">
+          <div className="text-center mb-20">
+            <h3 className="text-primary tracking-[0.2em] text-sm uppercase mb-4 font-medium">Amenities</h3>
+            <h2 className="text-4xl md:text-5xl font-serif text-foreground">Premium Facilities</h2>
+          </div>
+
+          <motion.div variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true }} className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+             {[
+               { icon: Droplet, label: "Pool" },
+               { icon: Dumbbell, label: "Gym" },
+               { icon: Calendar, label: "24/7 Reception" },
+               { icon: Wind, label: "Spa" },
+               { icon: Utensils, label: "Restaurant" },
+               { icon: Wifi, label: "Free WiFi" },
+               { icon: ShieldCheck, label: "Parking" },
+               { icon: Plane, label: "Airport Transfer" },
+               { icon: Heart, label: "Laundry" },
+               { icon: Coffee, label: "Room Service" },
+               { icon: Users, label: "Business Center" },
+               { icon: Heart, label: "Doctor on Call" }
+             ].map((fac, i) => (
+               <motion.div key={i} variants={fadeInUp}>
+                 <div className="bg-secondary/50 p-8 flex flex-col items-center justify-center text-center hover:bg-white hover:shadow-xl transition-all duration-300 border border-transparent hover:border-primary/20 group h-full">
+                    <fac.icon className="w-10 h-10 text-primary mb-4 group-hover:scale-110 transition-transform duration-300" strokeWidth={1} />
+                    <span className="font-serif text-lg text-foreground">{fac.label}</span>
+                 </div>
+               </motion.div>
+             ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* SECTION 7: GUEST EXPERIENCE */}
+      <section className="py-32 bg-accent relative overflow-hidden">
+        {/* Subtle accent background lines */}
+        <div className="absolute inset-0 pointer-events-none opacity-20">
+           <div className="w-full h-[1px] bg-primary absolute top-1/4" />
+           <div className="w-full h-[1px] bg-primary absolute top-3/4" />
+           <div className="w-[1px] h-full bg-primary absolute left-1/3" />
+           <div className="w-[1px] h-full bg-primary absolute right-1/3" />
+        </div>
+
+        <div className="container mx-auto px-4 md:px-8 relative z-10">
+          <div className="flex flex-col items-center text-center text-white mb-20">
+             <div className="w-12 h-px bg-primary mb-8" />
+             <h2 className="text-4xl md:text-6xl font-serif mb-6">A Legacy of Excellence</h2>
+             <p className="text-white/70 max-w-2xl text-lg font-light">Celebrating years of creating unforgettable memories and setting the standard for luxury in Kathmandu.</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 text-center mb-20">
+             <div>
+               <div className="text-5xl md:text-7xl font-serif text-primary mb-4">10K+</div>
+               <div className="text-sm tracking-widest uppercase text-white/60">Happy Guests</div>
+             </div>
+             <div>
+               <div className="text-5xl md:text-7xl font-serif text-primary mb-4">4.9★</div>
+               <div className="text-sm tracking-widest uppercase text-white/60">Average Rating</div>
+             </div>
+             <div>
+               <div className="text-5xl md:text-7xl font-serif text-primary mb-4">15+</div>
+               <div className="text-sm tracking-widest uppercase text-white/60">Years of Service</div>
+             </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+             {["Unmatched Service", "Prime Location", "Holistic Wellness"].map((val, i) => (
+                <div key={i} className="bg-white/5 border border-white/10 p-8 backdrop-blur-sm text-center hover:bg-white/10 transition-colors">
+                   <h3 className="font-serif text-2xl text-white">{val}</h3>
+                </div>
+             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 8: TESTIMONIALS */}
+      <section className="py-32 bg-secondary">
+        <div className="container mx-auto px-4 md:px-8">
+          <div className="text-center mb-20">
+            <h3 className="text-primary tracking-[0.2em] text-sm uppercase mb-4 font-medium">Testimonials</h3>
+            <h2 className="text-4xl md:text-5xl font-serif text-foreground">What Our Guests Say</h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
-              { name: "Sarah L.", country: "United Kingdom", text: "An absolute gem in Thamel. The Korean spa was exactly what we needed after our trek in the Himalayas. The level of service is impeccable.", rating: 5 },
-              { name: "James W.", country: "Australia", text: "Beautifully designed rooms that offer a quiet sanctuary from the busy streets outside. The garden restaurant serves incredible food.", rating: 5 },
-              { name: "Min-ji K.", country: "South Korea", text: "I was surprised to find such an authentic Korean spa in Kathmandu. The facilities are top-tier and the hospitality is truly heartwarming.", rating: 5 }
+              { text: "An absolute oasis in the middle of Thamel. The rooms are stunning, the service is impeccable, and the spa is not to be missed.", name: "Sarah Jenkins", country: "United Kingdom" },
+              { text: "The perfect start and end to our Everest trek. Pure luxury, wonderful food, and the most accommodating staff we've ever encountered.", name: "Michael Chen", country: "Australia" },
+              { text: "Five-star experience from check-in to check-out. The attention to detail here is extraordinary. Highly recommended.", name: "Elena Rossi", country: "Italy" }
             ].map((review, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.2 }}
-                className="bg-card p-8 border border-border/50 relative"
-              >
-                <div className="absolute -top-4 right-8 bg-background p-2 border border-border/50 rounded-full text-primary">
-                  <Star className="w-4 h-4 fill-primary" />
-                </div>
-                <div className="flex gap-1 mb-6">
-                  {[...Array(review.rating)].map((_, idx) => (
-                    <Star key={idx} className="w-4 h-4 fill-primary text-primary" />
-                  ))}
-                </div>
-                <p className="text-muted-foreground font-light italic mb-8">"{review.text}"</p>
-                <div>
-                  <div className="font-serif text-lg text-white">{review.name}</div>
-                  <div className="text-xs uppercase tracking-widest text-primary">{review.country}</div>
-                </div>
-              </motion.div>
+               <motion.div key={i} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp} transition={{ delay: i * 0.1 }}>
+                 <Card className="bg-white border-none shadow-md hover:shadow-xl transition-shadow p-8 h-full rounded-none">
+                    <div className="text-primary text-6xl font-serif leading-none opacity-20 mb-4">"</div>
+                    <div className="flex text-primary mb-6">
+                      {[1,2,3,4,5].map(s => <Star key={s} className="w-4 h-4 fill-current" />)}
+                    </div>
+                    <p className="text-foreground/80 font-serif text-lg italic mb-8 flex-grow">"{review.text}"</p>
+                    <div>
+                      <div className="font-medium text-foreground tracking-wide uppercase text-sm">{review.name}</div>
+                      <div className="text-muted-foreground text-xs">{review.country}</div>
+                    </div>
+                 </Card>
+               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* SECTION 9: LOCATION ADVANTAGES */}
-      <section className="py-24 bg-card border-y border-border/50">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <motion.div 
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              className="grid grid-cols-2 gap-4"
-            >
-              <div className="bg-background p-8 border border-border/50">
-                <MapPin className="text-primary w-8 h-8 mb-4" />
-                <h4 className="font-serif text-xl mb-2 text-white">Central Thamel</h4>
-                <p className="text-sm text-muted-foreground font-light">Steps away from premier shopping and dining.</p>
-              </div>
-              <div className="bg-background p-8 border border-border/50 mt-8">
-                <Star className="text-primary w-8 h-8 mb-4" />
-                <h4 className="font-serif text-xl mb-2 text-white">Heritage Sites</h4>
-                <p className="text-sm text-muted-foreground font-light">Short drive to Swayambhunath & Durbar Square.</p>
-              </div>
-              <div className="bg-background p-8 border border-border/50">
-                <Car className="text-primary w-8 h-8 mb-4" />
-                <h4 className="font-serif text-xl mb-2 text-white">Easy Transit</h4>
-                <p className="text-sm text-muted-foreground font-light">Accessible taxi stand and airport shuttles.</p>
-              </div>
-              <div className="bg-background p-8 border border-border/50 mt-8">
-                <ShieldCheck className="text-primary w-8 h-8 mb-4" />
-                <h4 className="font-serif text-xl mb-2 text-white">Safe District</h4>
-                <p className="text-sm text-muted-foreground font-light">Located in the most tourist-friendly area.</p>
-              </div>
-            </motion.div>
-
-            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp}>
-              <h3 className="text-primary tracking-[0.2em] text-sm uppercase mb-4">Location</h3>
-              <h2 className="text-4xl md:text-5xl font-serif mb-6 leading-tight">The Perfect Base for<br/>Your Adventures</h2>
-              <p className="text-muted-foreground text-lg mb-8 font-light leading-relaxed">
-                Hotel Thamel Park Spa is strategically situated to offer you the best of Kathmandu. Whether you're preparing for a Himalayan trek or exploring ancient temples, you'll find yourself at the center of it all.
-              </p>
-              <Link href="/contact">
-                <Button variant="outline" className="rounded-none border-primary text-primary hover:bg-primary hover:text-primary-foreground uppercase tracking-widest text-xs h-12 px-8">
-                  View Map & Directions
-                </Button>
-              </Link>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* SECTION 10: BOOKING CTA (Gradient Bar) */}
-      <section className="py-20 aurora-bg border-y border-border/50">
-        <div className="container mx-auto px-4 text-center relative z-10">
-          <h2 className="text-3xl md:text-4xl font-serif text-white mb-4">Ready to Experience True Luxury?</h2>
-          <p className="text-gray-300 mb-8 max-w-2xl mx-auto font-light">
-            Book directly through our website to receive the best rates, complimentary upgrades when available, and exclusive spa access.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/contact">
-              <Button className="bg-primary text-primary-foreground hover:bg-accent rounded-none uppercase tracking-widest text-sm h-14 px-10">
-                Book Your Stay
-              </Button>
-            </Link>
-            <Link href="/contact">
-              <Button variant="outline" className="bg-transparent border-white text-white hover:bg-white/10 rounded-none uppercase tracking-widest text-sm h-14 px-10">
-                Contact Us
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* SECTION 11: FAQ */}
-      <section className="py-24 bg-background">
-        <div className="container mx-auto px-4 max-w-4xl">
+      {/* SECTION 9: GALLERY PREVIEW (Decorative Mosaic) */}
+      <section className="py-32 bg-white">
+        <div className="container mx-auto px-4 md:px-8">
           <div className="text-center mb-16">
-            <h3 className="text-primary tracking-[0.2em] text-sm uppercase mb-4">Information</h3>
-            <h2 className="text-4xl font-serif">Frequently Asked Questions</h2>
+            <h2 className="text-4xl md:text-5xl font-serif text-foreground mb-6">A Visual Journey</h2>
+            <p className="text-muted-foreground text-lg max-w-2xl mx-auto font-light">Explore the essence of Hotel Thamel Park Spa through our conceptual luxury mosaic.</p>
           </div>
 
-          <Accordion type="single" collapsible className="w-full">
-            {[
-              { q: "What time is check-in and check-out?", a: "Standard check-in time is 2:00 PM, and check-out is at 12:00 PM (noon). Early check-in or late check-out can be arranged subject to availability." },
-              { q: "Do you provide airport transportation?", a: "Yes, we offer premium airport pickup and drop-off services. Please contact our concierge with your flight details at least 24 hours in advance." },
-              { q: "Is the Korean Spa included in the room rate?", a: "Access to basic spa facilities (sauna/steam) is complimentary for Executive Suite guests. Other guests may purchase spa passes or book specific treatments." },
-              { q: "Do you have vegetarian/vegan options at the restaurant?", a: "Absolutely. Our Garden Restaurant features extensive vegetarian and vegan menus, utilizing fresh, locally-sourced organic ingredients." },
-              { q: "Are pets allowed at the hotel?", a: "While we love animals, to maintain the tranquil spa environment and cater to guests with allergies, we currently do not allow pets on the property." },
-              { q: "Can the hotel help arrange local tours or trekking?", a: "Yes, our dedicated travel desk can assist you with booking city tours, mountain flights, and reputable trekking guides." }
-            ].map((faq, i) => (
-              <AccordionItem key={i} value={`item-${i}`} className="border-border/50">
-                <AccordionTrigger className="text-left font-serif text-lg text-white hover:text-primary transition-colors">
-                  {faq.q}
-                </AccordionTrigger>
-                <AccordionContent className="text-muted-foreground font-light leading-relaxed">
-                  {faq.a}
-                </AccordionContent>
-              </AccordionItem>
-            ))}
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2 mb-16 auto-rows-[150px]">
+             {[
+               { type: "text", content: "Serenity", col: 2, row: 1, bg: "bg-secondary" },
+               { type: "icon", icon: Wind, col: 1, row: 1, bg: "bg-primary/10" },
+               { type: "icon", icon: Star, col: 1, row: 2, bg: "bg-primary text-white" },
+               { type: "text", content: "Wellness", col: 2, row: 2, bg: "bg-white border border-border" },
+               { type: "pattern", col: 1, row: 1, bg: "bg-secondary" },
+               { type: "text", content: "Heritage", col: 2, row: 1, bg: "bg-primary/5" },
+               { type: "icon", icon: Leaf, col: 1, row: 2, bg: "bg-secondary" },
+               { type: "text", content: "Comfort", col: 1, row: 1, bg: "bg-primary/20" },
+               { type: "pattern", col: 2, row: 2, bg: "bg-primary/10" },
+               { type: "text", content: "Elegance", col: 1, row: 1, bg: "bg-white border border-border" },
+               { type: "icon", icon: Coffee, col: 1, row: 1, bg: "bg-primary text-white" },
+               { type: "text", content: "Kathmandu", col: 3, row: 1, bg: "bg-secondary" },
+             ].map((tile, i) => (
+                <div key={i} className={`flex items-center justify-center p-6 ${tile.bg}`} style={{ gridColumn: `span ${tile.col}`, gridRow: `span ${tile.row}` }}>
+                   {tile.type === "text" && <span className="font-serif text-2xl">{tile.content}</span>}
+                   {tile.type === "icon" && tile.icon && <tile.icon className="w-12 h-12 opacity-80" strokeWidth={1} />}
+                   {tile.type === "pattern" && <div className="w-full h-full opacity-20" style={{ backgroundImage: 'repeating-linear-gradient(45deg, currentColor 0, currentColor 1px, transparent 1px, transparent 10px)' }} />}
+                </div>
+             ))}
+          </div>
+
+          <div className="text-center">
+             <Button data-testid="gallery-btn" variant="outline" className="rounded-none border-foreground text-foreground hover:bg-foreground hover:text-white px-10 py-6 h-auto tracking-widest uppercase text-xs">
+                View Full Gallery
+             </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 10: LOCATION */}
+      <section className="py-32 bg-secondary">
+        <div className="container mx-auto px-4 md:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+             
+             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp}>
+               <div className="aspect-square md:aspect-[4/3] w-full bg-white p-2 border border-border shadow-sm">
+                  <iframe 
+                    title="Location Map"
+                    src="https://maps.google.com/maps?q=Thamel+Kathmandu+Nepal&output=embed" 
+                    className="w-full h-full border-0 grayscale opacity-80 hover:grayscale-0 hover:opacity-100 transition-all duration-500"
+                    allowFullScreen
+                    loading="lazy"
+                  ></iframe>
+               </div>
+             </motion.div>
+
+             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp}>
+               <h3 className="text-primary tracking-[0.2em] text-sm uppercase mb-6 font-medium">Prime Location</h3>
+               <h2 className="text-4xl md:text-5xl font-serif text-foreground mb-10">In the Heart of Thamel</h2>
+               
+               <div className="space-y-6">
+                 {[
+                   { title: "Pashupatinath Temple", dist: "15 min drive", icon: MapPin },
+                   { title: "Boudhanath Stupa", dist: "20 min drive", icon: MapPin },
+                   { title: "Thamel Shopping", dist: "2 min walk", icon: MapPin },
+                   { title: "Tribhuvan Airport", dist: "30 min drive", icon: Plane }
+                 ].map((loc, i) => (
+                    <div key={i} className="flex items-center gap-6 bg-white p-6 border border-border/50 hover:border-primary/30 transition-colors">
+                       <div className="w-12 h-12 rounded-full bg-secondary flex items-center justify-center shrink-0">
+                         <loc.icon className="text-primary w-5 h-5" />
+                       </div>
+                       <div>
+                         <h4 className="font-serif text-lg text-foreground">{loc.title}</h4>
+                         <span className="text-sm text-primary tracking-widest uppercase">{loc.dist}</span>
+                       </div>
+                    </div>
+                 ))}
+               </div>
+             </motion.div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 11: BOOKING CTA */}
+      <section className="py-32 bg-accent relative overflow-hidden flex items-center justify-center">
+         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(230,172,12,0.15)_0%,transparent_60%)]" />
+         <div className="container mx-auto px-4 relative z-10 text-center">
+            <h2 className="text-5xl md:text-7xl font-serif text-white mb-6">Begin Your Journey to Luxury</h2>
+            <p className="text-white/80 text-xl font-light max-w-2xl mx-auto mb-12">Experience the perfect blend of Nepalese hospitality and premium wellness.</p>
+            <div className="flex flex-col sm:flex-row justify-center gap-6">
+              <Button asChild data-testid="cta-btn-book" className="w-full sm:w-auto rounded-none bg-primary text-white hover:bg-primary/90 px-10 py-6 h-auto tracking-widest uppercase text-sm">
+                <Link href="/contact">Book Your Stay</Link>
+              </Button>
+              <Button asChild data-testid="cta-btn-contact" variant="outline" className="w-full sm:w-auto rounded-none border-white text-white hover:bg-white hover:text-accent px-10 py-6 h-auto tracking-widest uppercase text-sm bg-transparent">
+                <Link href="/contact">Contact Us</Link>
+              </Button>
+            </div>
+         </div>
+      </section>
+
+      {/* SECTION 12: FAQ */}
+      <section className="py-32 bg-white">
+        <div className="container mx-auto px-4 md:max-w-4xl">
+          <div className="text-center mb-16">
+            <h3 className="text-primary tracking-[0.2em] text-sm uppercase mb-4 font-medium">Information</h3>
+            <h2 className="text-4xl md:text-5xl font-serif text-foreground">Frequently Asked Questions</h2>
+          </div>
+
+          <Accordion type="single" collapsible className="w-full space-y-4">
+             {[
+               { q: "What are the check-in and check-out times?", a: "Check-in is from 2:00 PM, and check-out is until 12:00 PM (noon). Early check-in and late check-out are subject to availability." },
+               { q: "Is access to the Spa included in the room rate?", a: "Access to the general spa facilities (sauna, steam) is included for Premium Deluxe and above. Treatments and massages are charged separately." },
+               { q: "Do you provide airport transfer services?", a: "Yes, we provide luxury airport transfers. Please contact our concierge at least 24 hours prior to your arrival to arrange this service." },
+               { q: "What is your pet policy?", a: "While we love animals, to maintain the serene environment and accommodate guests with allergies, pets are not permitted on the property." },
+               { q: "What is the cancellation policy?", a: "Cancellations made 48 hours prior to arrival are fully refundable. Late cancellations or no-shows will be charged for the first night." },
+               { q: "Is parking available at the hotel?", a: "Yes, we offer complimentary secure valet parking for all our registered guests." }
+             ].map((faq, i) => (
+                <AccordionItem key={i} value={`item-${i}`} className="bg-secondary/30 border border-border px-6">
+                  <AccordionTrigger className="font-serif text-lg text-foreground hover:text-primary hover:no-underline text-left py-6">{faq.q}</AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground leading-relaxed pb-6 text-base font-light">
+                    {faq.a}
+                  </AccordionContent>
+                </AccordionItem>
+             ))}
           </Accordion>
         </div>
       </section>
 
-      {/* SECTION 12: FINAL BANNER */}
-      <section className="py-32 bg-card relative overflow-hidden border-t border-border/50">
-        <div className="absolute inset-0 opacity-20">
-           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/20 rounded-full blur-[120px] pointer-events-none"></div>
-        </div>
-        <div className="container mx-auto px-4 text-center relative z-10">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            className="max-w-3xl mx-auto border border-primary/20 glass-panel p-12 md:p-20"
-          >
-            <Star className="text-primary w-12 h-12 mx-auto mb-8" />
-            <h2 className="text-4xl md:text-5xl font-serif text-white mb-6">Your Sanctuary Awaits</h2>
-            <p className="text-muted-foreground text-lg mb-10 font-light">
-              Elevate your Kathmandu experience. Immerse yourself in luxury, discover Korean wellness, and create unforgettable memories at Hotel Thamel Park Spa.
-            </p>
-            <Link href="/contact">
-              <Button className="bg-primary text-primary-foreground hover:bg-accent rounded-none uppercase tracking-widest text-sm h-14 px-12">
-                Reserve Your Experience
-              </Button>
-            </Link>
-          </motion.div>
-        </div>
-      </section>
-
     </div>
+  );
+}
+
+function QuoteIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
+      <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
+    </svg>
   );
 }

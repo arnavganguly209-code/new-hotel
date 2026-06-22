@@ -44,38 +44,48 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
-:root, .dark {
+:root {
+  --background: 40 25% 97%;          /* warm cream white */
+  --foreground: 220 20% 12%;         /* deep charcoal */
+  --card: 0 0% 100%;                 /* pure white */
+  --card-foreground: 220 20% 12%;
+  --card-border: 40 15% 88%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 220 20% 12%;
+  --popover-border: 40 15% 88%;
+  --primary: 38 72% 42%;             /* rich antique gold (darker for white bg contrast) */
+  --primary-foreground: 0 0% 100%;
+  --secondary: 40 20% 92%;           /* warm cream */
+  --secondary-foreground: 220 20% 20%;
+  --muted: 40 15% 90%;
+  --muted-foreground: 220 10% 48%;
+  --accent: 220 45% 18%;             /* deep navy for accent sections */
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 40 15% 86%;
+  --input: 40 15% 86%;
+  --ring: 38 72% 42%;
+  --radius: 0.25rem;
+}
+.dark {
+  /* keep footer dark — same values as old dark theme */
   --background: 220 25% 4%;
   --foreground: 40 20% 92%;
-  
   --card: 220 22% 8%;
   --card-foreground: 40 20% 92%;
   --card-border: 220 15% 25%;
-  
-  --popover: 220 22% 8%;
-  --popover-foreground: 40 20% 92%;
-  --popover-border: 220 15% 25%;
-  
-  --primary: 38 92% 58%;
+  --primary: 38 80% 52%;
   --primary-foreground: 220 25% 4%;
-  
   --secondary: 220 15% 15%;
   --secondary-foreground: 40 20% 92%;
-  
   --muted: 220 15% 15%;
   --muted-foreground: 220 15% 65%;
-  
   --accent: 350 60% 65%;
   --accent-foreground: 40 20% 92%;
-  
-  --destructive: 0 84.2% 60.2%;
-  --destructive-foreground: 0 0% 98%;
-  
   --border: 220 15% 25%;
   --input: 220 15% 25%;
-  --ring: 38 92% 58%;
-  
-  --radius: 0.5rem;
+  --ring: 38 80% 52%;
 }
 
 @layer base {
@@ -91,10 +101,10 @@
 }
 
 .glass-panel {
-  background: rgba(14, 18, 25, 0.6);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255,255,255,0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255,255,255,0.9);
 }
 
 .text-gradient {
@@ -109,48 +119,6 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-}
-
-.aurora-bg {
-  position: relative;
-  overflow: hidden;
-  background: hsl(var(--background));
-}
-
-.aurora-bg::before,
-.aurora-bg::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 100vw;
-  height: 100vw;
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  filter: blur(100px);
-  z-index: 0;
-  opacity: 0.4;
-  pointer-events: none;
-}
-
-.aurora-bg::before {
-  background: radial-gradient(circle, rgba(230,172,12,0.15) 0%, rgba(0,0,0,0) 60%);
-  animation: float 20s infinite linear;
-}
-
-.aurora-bg::after {
-  background: radial-gradient(circle, rgba(212,106,126,0.15) 0%, rgba(0,0,0,0) 60%);
-  animation: float-reverse 25s infinite linear;
-}
-
-@keyframes float {
-  0% { transform: translate(-50%, -50%) rotate(0deg) translate(10%, 10%) rotate(0deg); }
-  100% { transform: translate(-50%, -50%) rotate(360deg) translate(10%, 10%) rotate(-360deg); }
-}
-
-@keyframes float-reverse {
-  0% { transform: translate(-50%, -50%) rotate(0deg) translate(-10%, -10%) rotate(0deg); }
-  100% { transform: translate(-50%, -50%) rotate(-360deg) translate(-10%, -10%) rotate(360deg); }
 }
 
 @keyframes tile-pulse-a {
@@ -170,114 +138,13 @@
 .mosaic-tile-gold   { animation: tile-pulse-b var(--td, 3.5s) var(--dl, 0s) infinite ease-in-out; }
 .mosaic-tile-rose   { animation: tile-pulse-c var(--td, 4.2s) var(--dl, 0s) infinite ease-in-out; }
 
-/**
- * Using the elevate system.
- * Automatic contrast adjustment.
- *
- * <element className="hover-elevate" />
- * <element className="active-elevate-2" />
- *
- * // Using the tailwind utility when a data attribute is "on"
- * <element className="toggle-elevate data-[state=on]:toggle-elevated" />
- * // Or manually controlling the toggle state
- * <element className="toggle-elevate toggle-elevated" />
- *
- * Elevation systems have to handle many states.
- * - not-hovered, vs. hovered vs. active  (three mutually exclusive states)
- * - toggled or not
- * - focused or not (this is not handled with these utilities)
- *
- * Even without handling focused or not, this is six possible combinations that
- * need to be distinguished from eachother visually.
- */
 @layer utilities {
-
-  /* Hide ugly search cancel button in Chrome until we can style it properly */
   input[type="search"]::-webkit-search-cancel-button {
     @apply hidden;
   }
-
-  /* Placeholder styling for contentEditable div */
   [contenteditable][data-placeholder]:empty::before {
     content: attr(data-placeholder);
     color: hsl(var(--muted-foreground));
     pointer-events: none;
-  }
-
-  /* .no-default-hover-elevate/no-default-active-elevate is an escape hatch so consumers of
-   * buttons/badges can remove the automatic brightness adjustment on interactions
-   * and program their own. */
-  .no-default-hover-elevate {}
-
-  .no-default-active-elevate {}
-
-
-  /**
-   * Toggleable backgrounds go behind the content. Hoverable/active goes on top.
-   * This way they can stack/compound. Both will overlap the parent's borders!
-   * So borders will be automatically adjusted both on toggle, and hover/active,
-   * and they will be compounded.
-   */
-  .toggle-elevate::before,
-  .toggle-elevate-2::before {
-    content: "";
-    pointer-events: none;
-    position: absolute;
-    inset: 0px;
-    /*border-radius: inherit;   match rounded corners */
-    border-radius: inherit;
-    z-index: -1;
-    /* sits behind content but above backdrop */
-  }
-
-  .toggle-elevate.toggle-elevated::before {
-    background-color: var(--elevate-2);
-  }
-
-  /* If there's a 1px border, adjust the inset so that it covers that parent's border */
-  .border.toggle-elevate::before {
-    inset: -1px;
-  }
-
-  /* Does not work on elements with overflow:hidden! */
-  .hover-elevate:not(.no-default-hover-elevate),
-  .active-elevate:not(.no-default-active-elevate),
-  .hover-elevate-2:not(.no-default-hover-elevate),
-  .active-elevate-2:not(.no-default-active-elevate) {
-    position: relative;
-    z-index: 0;
-  }
-
-  .hover-elevate:not(.no-default-hover-elevate)::after,
-  .active-elevate:not(.no-default-active-elevate)::after,
-  .hover-elevate-2:not(.no-default-hover-elevate)::after,
-  .active-elevate-2:not(.no-default-active-elevate)::after {
-    content: "";
-    pointer-events: none;
-    position: absolute;
-    inset: 0px;
-    /*border-radius: inherit;   match rounded corners */
-    border-radius: inherit;
-    z-index: 999;
-    /* sits in front of content */
-  }
-
-  .hover-elevate:hover:not(.no-default-hover-elevate)::after,
-  .active-elevate:active:not(.no-default-active-elevate)::after {
-    background-color: var(--elevate-1);
-  }
-
-  .hover-elevate-2:hover:not(.no-default-hover-elevate)::after,
-  .active-elevate-2:active:not(.no-default-active-elevate)::after {
-    background-color: var(--elevate-2);
-  }
-
-  /* If there's a 1px border, adjust the inset so that it covers that parent's border */
-  .border.hover-elevate:not(.no-hover-interaction-elevate)::after,
-  .border.active-elevate:not(.no-active-interaction-elevate)::after,
-  .border.hover-elevate-2:not(.no-hover-interaction-elevate)::after,
-  .border.active-elevate-2:not(.no-active-interaction-elevate)::after,
-  .border.hover-elevate:not(.no-hover-interaction-elevate)::after {
-    inset: -1px;
   }
 }

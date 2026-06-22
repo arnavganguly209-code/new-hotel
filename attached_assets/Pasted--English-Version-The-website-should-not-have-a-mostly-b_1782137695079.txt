@@ -1,0 +1,39 @@
+**English Version:**
+
+The website should not have a mostly black theme. It should be primarily **white, clean, luxury, and premium**, similar to high-end hotel websites. Please review the reference website carefully and create something significantly better.
+
+Current design is not looking premium enough. I only want the **Home Page** for now, but it must be extremely detailed and luxurious.
+
+Requirements:
+
+* Use a **white/light luxury theme** (avoid dark black backgrounds).
+* Design should be at least **3x more premium** than this reference:
+  [https://wondrous-creponne-ab3676.netlify.app/](https://wondrous-creponne-ab3676.netlify.app/)
+* Hero section should be elegant and visual-focused, **not overloaded with text**.
+* Use the hotel name: **Hotel Thamel Park Spa**.
+* Write only **“Spa”**, not “Korean Spa”.
+* Keep all existing hotel information and details; do not invent random content.
+* Add more premium sections, better layouts, luxury spacing, and modern UI elements.
+* Make it feel like a **5-star international hotel website**.
+* Include:
+
+  * Premium Hero Section
+  * About Hotel Section
+  * Luxury Rooms Showcase
+  * Spa & Wellness Section
+  * Garden Restaurant Section
+  * Hotel Facilities
+  * Guest Experience Section
+  * Testimonials
+  * Gallery Preview
+  * Location Section
+  * Booking CTA Section
+  * Ultra-Premium Footer
+* Use smooth animations, glass effects where appropriate, elegant typography, and high-end hotel branding.
+* Homepage should feel comparable to luxury hospitality websites and modern resort brands.
+* Keep the design professional, conversion-focused, and visually rich.
+* Do not use excessive text blocks.
+* Use large sections, premium cards, icons, statistics, and interactive elements.
+* The final homepage should be detailed, modern, responsive, SEO-friendly, and noticeably superior to the provided reference website. ([Wondrous Creations][1])
+
+[1]: https://wondrouscreations.app/?utm_source=chatgpt.com "Wondrous Creations • Fantastical, Almost Magical"
