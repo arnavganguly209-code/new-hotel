@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "Hotel Thamel Park Spa"
+version = "1.0.0"
+id = "artifacts/hotel-thamel"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 18372
+
+[services.development]
+run = "pnpm --filter @workspace/hotel-thamel run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/hotel-thamel", "run", "build" ]
+publicDir = "artifacts/hotel-thamel/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "18372"
+BASE_PATH = "/"
