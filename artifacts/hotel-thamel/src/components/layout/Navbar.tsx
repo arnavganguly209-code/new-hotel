@@ -18,87 +18,147 @@ export function Navbar() {
   }, []);
 
   const navLinks = [
-    { name: "Home", path: "/" },
+    { name: "Overview", path: "/" },
     { name: "Rooms", path: "/rooms" },
-    { name: "Spa", path: "/spa" },
-    { name: "Restaurant", path: "/restaurant" },
+    { name: "Dining", path: "/restaurant" },
+    { name: "Spa & Wellness", path: "/spa" },
+    { name: "Gallery", path: "/gallery" },
+  ];
+
+  const sideNavLinks = [
     { name: "About", path: "/about" },
+    { name: "Meetings & Weddings", path: "/contact" },
     { name: "Contact", path: "/contact" },
+    { name: "Privacy Policy", path: "#" },
+    { name: "Terms & Conditions", path: "#" },
   ];
 
   return (
     <>
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          isScrolled ? "bg-white/95 backdrop-blur-md shadow-sm py-3" : "bg-transparent py-5"
+          isScrolled ? "bg-white shadow-sm py-4" : "bg-transparent py-6"
         }`}
       >
         <div className="container mx-auto px-4 md:px-8">
           <div className="flex items-center justify-between">
             <Link href="/" className="flex items-center gap-2 group">
-              <span className="font-serif text-2xl tracking-wider text-foreground transition-colors">
-                HOTEL THAMEL
-                <span className="text-primary block text-xs tracking-[0.3em] font-sans">PARK SPA</span>
+              <span className="font-serif text-2xl tracking-wider text-[#111827] transition-colors">
+                Hotel Thamel Park & Spa
               </span>
             </Link>
 
             {/* Desktop Nav */}
-            <nav className="hidden md:flex items-center gap-8">
+            <nav className="hidden lg:flex items-center gap-8">
               {navLinks.map((link) => (
                 <Link
-                  key={link.path}
+                  key={link.name}
                   href={link.path}
-                  className={`text-sm tracking-wide uppercase transition-colors hover:text-primary ${
-                    location === link.path ? "text-primary font-medium" : "text-foreground/70"
+                  className={`text-sm tracking-wide uppercase transition-colors hover:text-[#c9a96e] ${
+                    location === link.path ? "text-[#c9a96e] font-medium" : "text-[#4b5563]"
                   }`}
                 >
                   {link.name}
                 </Link>
               ))}
-              <Button asChild data-testid="nav-book-now" className="bg-primary hover:bg-primary/90 text-white border-none rounded-none px-8 py-6 font-serif tracking-widest uppercase text-xs ml-4">
-                <Link href="/contact">Book Now</Link>
-              </Button>
+              <div className="flex items-center gap-4 ml-4">
+                <Button asChild data-testid="nav-book-now" className="bg-[#c9a96e] hover:bg-[#a07840] text-white border-none rounded-none px-8 py-6 font-serif tracking-widest uppercase text-xs">
+                  <Link href="/contact">Book Now</Link>
+                </Button>
+                <button
+                  className="text-[#111827] hover:text-[#c9a96e] transition-colors"
+                  onClick={() => setIsMobileMenuOpen(true)}
+                  data-testid="button-desktop-menu"
+                >
+                  <Menu size={28} />
+                </button>
+              </div>
             </nav>
 
             {/* Mobile Menu Toggle */}
-            <button
-              className="md:hidden text-foreground hover:text-primary transition-colors"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              data-testid="button-mobile-menu"
-            >
-              {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
-            </button>
+            <div className="lg:hidden flex items-center gap-4">
+               <button
+                className="text-[#111827] hover:text-[#c9a96e] transition-colors"
+                onClick={() => setIsMobileMenuOpen(true)}
+                data-testid="button-mobile-menu"
+              >
+                <Menu size={28} />
+              </button>
+            </div>
           </div>
         </div>
       </header>
 
-      {/* Mobile Nav Overlay */}
+      {/* Side Panel */}
       <AnimatePresence>
         {isMobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="fixed inset-0 z-40 bg-white/95 backdrop-blur-xl pt-24 pb-8 px-4 flex flex-col justify-center"
-          >
-            <nav className="flex flex-col items-center gap-8">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.path}
-                  href={link.path}
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm"
+              onClick={() => setIsMobileMenuOpen(false)}
+            />
+            <motion.div
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "tween", duration: 0.3 }}
+              className="fixed top-0 right-0 bottom-0 w-full max-w-sm z-50 bg-white shadow-2xl flex flex-col"
+            >
+              <div className="p-6 flex justify-end">
+                <button
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className={`text-xl tracking-widest uppercase transition-colors ${
-                    location === link.path ? "text-primary font-medium" : "text-foreground/80 hover:text-primary"
-                  }`}
+                  className="text-[#111827] hover:text-[#c9a96e] transition-colors"
+                  data-testid="button-close-menu"
                 >
-                  {link.name}
-                </Link>
-              ))}
-              <Button asChild data-testid="nav-mobile-book-now" className="mt-4 bg-primary text-white rounded-none px-12 py-6 font-serif tracking-widest uppercase text-sm w-full">
-                <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)}>Book Your Stay</Link>
-              </Button>
-            </nav>
-          </motion.div>
+                  <X size={28} />
+                </button>
+              </div>
+              
+              <div className="flex-1 overflow-y-auto px-10 py-8">
+                <div className="lg:hidden mb-12">
+                   <nav className="flex flex-col gap-6">
+                    {navLinks.map((link) => (
+                      <div key={link.name}>
+                        <Link
+                          href={link.path}
+                          onClick={() => setIsMobileMenuOpen(false)}
+                          className="font-serif text-2xl text-[#111827] hover:text-[#c9a96e] transition-colors"
+                        >
+                          {link.name}
+                        </Link>
+                      </div>
+                    ))}
+                   </nav>
+                </div>
+
+                <div className="w-8 h-px bg-[#c9a96e] mb-12 hidden lg:block" />
+
+                <nav className="flex flex-col gap-6">
+                  {sideNavLinks.map((link) => (
+                    <div key={link.name}>
+                      <Link
+                        href={link.path}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className="text-sm tracking-widest uppercase text-[#4b5563] hover:text-[#c9a96e] transition-colors"
+                      >
+                        {link.name}
+                      </Link>
+                      <div className="h-px w-full bg-[#f0f0f0] mt-6" />
+                    </div>
+                  ))}
+                </nav>
+
+                <div className="mt-16">
+                  <Button asChild data-testid="side-nav-book-now" className="w-full bg-[#c9a96e] text-white hover:bg-[#a07840] rounded-none py-6 uppercase tracking-widest text-xs font-serif">
+                    <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)}>Book Your Stay</Link>
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
     </>
