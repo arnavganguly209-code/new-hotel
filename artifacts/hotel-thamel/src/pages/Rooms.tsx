@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "wouter";
-import { motion } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import {
   Wifi, Coffee, Tv, Wind, Bath, Users, Maximize2,
@@ -9,12 +9,12 @@ import {
 
 const GOLD = "#c9a96e";
 
-const fadeInUp = {
+const fadeInUp: Variants = {
   hidden: { opacity: 0, y: 30 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: "easeOut" } },
 };
 
-const stagger = {
+const stagger: Variants = {
   hidden: {},
   visible: { transition: { staggerChildren: 0.12 } },
 };
